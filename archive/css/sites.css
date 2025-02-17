@@ -1,0 +1,59 @@
+#site-list {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+
+  width: 100%;
+}
+
+
+.site {
+  width: 33%;
+
+  padding: 1%;
+  box-sizing: border-box;
+
+  background-color: var(--surface1);
+  border-radius: 10px;
+  border: 2px solid var(--surface2);
+  color: var(--text1);
+  text-decoration: none;
+}
+
+.site-icon {
+  max-width: 100%;
+}
+
+.site-name,
+.site-description {
+  text-align: center;
+}
+
+.site-tags {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  gap: 0.25em;
+}
+
+.tag {
+  color: var(--base) !important;
+  padding: 0.25em 0.5em;
+  width: fit-content;
+
+  border-radius: 0.75em;
+}
+
+.site-domain {
+  background-color: var(--blue);
+}
+
+.site-source {
+  background-color: var(--sapphire);
+}
+
+.site-source a {
+  color: var(--base);
+  text-decoration: none;
+}
