@@ -32,7 +32,7 @@ class Babbler:
 
     def add_sentence(self, sentence: str) -> None:
         words = sentence.split()
-        words = [word.strip(string.punctuation).replace('\'', '') for word in words]
+        words = [word.strip(string.punctuation + string.digits).replace('\'', '') for word in words]
 
         ngram = " ".join(words[:self.n])
 
