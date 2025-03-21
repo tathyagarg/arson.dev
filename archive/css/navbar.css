@@ -87,6 +87,6 @@ nav ul {
 }
 
 nav ul li a {
-  color: white;
+  color: var(--text);
   text-decoration: none;
 }
