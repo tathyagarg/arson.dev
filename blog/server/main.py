@@ -1,6 +1,6 @@
 from contextlib import asynccontextmanager
 from fastapi import Body, FastAPI, status
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
 
@@ -33,6 +33,22 @@ api = FastAPI()
 @app.get('/')
 async def root():
     return FileResponse("static/html/index.html")
+
+
+@app.get('/blog/{slug}')
+async def blog(slug: str):
+    template = open('static/html/blog.html').read()
+    with sqlite3.connect('blog.db') as conn:
+        cur = conn.cursor()
+        cur.execute('SELECT title, content, created_at FROM blog WHERE slug = ?', (slug,))
+        res = cur.fetchone()
+        if not res:
+            return FileResponse("static/html/404.html")
+        title, content, created_at = res
+        cur.execute('SELECT tag_name FROM blog_tag WHERE blog_slug = ?', (slug,))
+        tags = [tag[0] for tag in cur.fetchall()]
+
+        return HTMLResponse(template.format(title=title, content=content, created_at=created_at, tags=', '.join(tags)))
 
 
 @api.post(
