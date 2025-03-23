@@ -12,13 +12,24 @@ from typing import Annotated
 load_dotenv()
 
 SECRET_KEY = os.getenv('SECRET_KEY')
+DATABASE = 'blog.db' 
+INDEX = 'static/html/index.html'
+BLOG = 'static/html/blog.html'
+ARTICLES = 'static/html/articles.html'
+NOT_FOUND = 'static/html/404.html'
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    with sqlite3.connect('blog.db') as conn:
+    with sqlite3.connect(DATABASE) as conn:
         cur = conn.cursor()
-        cur.execute('CREATE TABLE IF NOT EXISTS blog (slug TEXT PRIMARY KEY, title TEXT, content TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)')
+        cur.execute('''CREATE TABLE IF NOT EXISTS blog (
+            slug TEXT PRIMARY KEY,
+            title TEXT,
+            content TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            banner_url TEXT
+        )''')
         cur.execute('CREATE TABLE IF NOT EXISTS tag (name TEXT PRIMARY KEY)')
         cur.execute('CREATE TABLE IF NOT EXISTS blog_tag (blog_slug TEXT, tag_name TEXT, PRIMARY KEY (blog_slug, tag_name))')
         conn.commit()
@@ -32,23 +43,61 @@ api = FastAPI()
 
 @app.get('/')
 async def root():
-    return FileResponse("static/html/index.html")
+    return FileResponse(INDEX)
 
 
 @app.get('/blog/{slug}')
 async def blog(slug: str):
-    template = open('static/html/blog.html').read()
-    with sqlite3.connect('blog.db') as conn:
+    template = open(BLOG).read()
+    with sqlite3.connect(DATABASE) as conn:
         cur = conn.cursor()
         cur.execute('SELECT title, content, created_at FROM blog WHERE slug = ?', (slug,))
         res = cur.fetchone()
+
         if not res:
-            return FileResponse("static/html/404.html")
+            return FileResponse(NOT_FOUND)
+
         title, content, created_at = res
         cur.execute('SELECT tag_name FROM blog_tag WHERE blog_slug = ?', (slug,))
         tags = [tag[0] for tag in cur.fetchall()]
 
-        return HTMLResponse(template.format(title=title, content=content, created_at=created_at, tags=', '.join(tags)))
+        tree = f'''<h1>
+            <a href="#head">{title}</a>
+        </h1>'''
+
+        final_content = f'''<div class="head-container">
+            <h1>{title}</h1>
+            <a class="anchor" name="head"></a>
+        </div>'''
+
+        for i, line in enumerate(content.split('\n')):
+            if line.startswith('#'):
+                # get count of hashes
+                hashes = len(line.split(' ')[0])
+                tree += f'''<h{hashes + 1}>
+                    <a href=\"#h{i}\">{line.strip('#')}</a>
+                </h{hashes + 1}>'''
+
+                final_content += f'''<div class="head-container">
+                    <h{hashes + 1}>{line.strip("#")}</h{hashes + 1}>
+                    <a class="anchor" name="h{i}"></a>
+                </div>'''
+            else:
+                final_content += f'<p>{line}</p>'
+
+
+        return HTMLResponse(template.format(
+            title=title,
+            content=final_content,
+            created_at=created_at,
+            tags=', '.join(tags),
+            tree=tree
+        ))
+
+
+@app.get('/articles')
+async def articles():
+    return FileResponse(ARTICLES)
 
 
 @api.post(
@@ -59,22 +108,30 @@ async def blog(slug: str):
     responses={
         status.HTTP_401_UNAUTHORIZED: {
             'description': 'Unauthorized'
+        },
+        status.HTTP_409_CONFLICT: {
+            'description': 'Slug already exists'
         }
     },
 )
-async def post_blog(
+async def post_blog_ep(
     slug: Annotated[str, Body(...)],
     title: Annotated[str, Body(...)],
     tags: Annotated[list[str], Body(...)],
     content: Annotated[str, Body(...)],
+    banner_url: Annotated[str, Body(...)],
     authorization: Annotated[str, Body(...)]
 ):
     if authorization != SECRET_KEY:
         return status.HTTP_401_UNAUTHORIZED
 
-    with sqlite3.connect('blog.db') as conn:
+    with sqlite3.connect(DATABASE) as conn:
         cur = conn.cursor()
-        cur.execute('INSERT INTO blog (slug, title, content) VALUES (?, ?, ?)', (slug, title, content))
+        try:
+            cur.execute('INSERT INTO blog (slug, title, content, banner) VALUES (?, ?, ?, ?)', (slug, title, content, banner_url))
+        except sqlite3.IntegrityError:
+            return status.HTTP_409_CONFLICT
+
         for tag in tags:
             cur.execute('INSERT INTO tag (name) VALUES (?) ON CONFLICT DO NOTHING', (tag,))
             cur.execute('INSERT INTO blog_tag (blog_slug, tag_name) VALUES (?, ?)', (slug, tag))
@@ -97,14 +154,14 @@ async def post_blog(
         }
     },
 )
-async def create_tag(
+async def post_tag_ep(
     name: Annotated[str, Body(...)],
     authorization: Annotated[str, Body(...)]
 ):
     if authorization != SECRET_KEY:
         return status.HTTP_401_UNAUTHORIZED
 
-    with sqlite3.connect('blog.db') as conn:
+    with sqlite3.connect(DATABASE) as conn:
         cur = conn.cursor()
         cur.execute('INSERT INTO tag (name) VALUES (?) ON CONFLICT DO NOTHING', (name,))
         conn.commit()
@@ -113,12 +170,12 @@ async def create_tag(
 
 
 @api.get(
-    '/tag',
+    '/tags',
     summary='List all tags',
     description='List all tags in the database',
 )
-async def list_tags():
-    with sqlite3.connect('blog.db') as conn:
+async def get_tags_ep():
+    with sqlite3.connect(DATABASE) as conn:
         cur = conn.cursor()
         cur.execute('SELECT name FROM tag')
         return [tag[0] for tag in cur.fetchall()]
@@ -134,14 +191,51 @@ async def list_tags():
         }
     },
 )
-async def get_blog(slug: str):
-    with sqlite3.connect('blog.db') as conn:
+async def get_blog_slug_ep(slug: str):
+    with sqlite3.connect(DATABASE) as conn:
         cur = conn.cursor()
         cur.execute('SELECT title, content, created_at FROM blog WHERE slug = ?', (slug,))
         res = cur.fetchone()
+
         if not res:
             return status.HTTP_404_NOT_FOUND
+
         return {'title': res[0], 'content': res[1], 'created_at': res[2]}
+
+
+@api.get('/articles')
+async def get_articles_ep():
+    with sqlite3.connect(DATABASE) as conn:
+        cur = conn.cursor()
+        cur.execute('SELECT slug, title, created_at FROM blog')
+        return [
+            {
+                'slug': row[0],
+                'title': row[1],
+                'created_at': row[2]
+            }
+            for row in cur.fetchall()
+        ]
+
+
+@api.get('/recent')
+async def get_recent_ep():
+    result = []
+    with sqlite3.connect(DATABASE) as conn:
+        cur = conn.cursor()
+        cur.execute('SELECT slug, title, created_at FROM blog ORDER BY created_at DESC LIMIT 5')
+        for row in cur.fetchall():
+            cur.execute('SELECT tag_name FROM blog_tag WHERE blog_slug = ?', (row[0],))
+            tags = [tag[0] for tag in cur.fetchall()]
+
+            result.append({
+                'slug': row[0],
+                'title': row[1],
+                'created_at': row[2],
+                'tags': tags
+            })
+
+        return result
 
 
 app.mount('/api', api)
