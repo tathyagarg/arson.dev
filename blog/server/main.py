@@ -4,6 +4,7 @@ from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
 
+import re
 import os
 import sqlite3 
 from typing import Annotated
@@ -23,6 +24,7 @@ NOT_FOUND = 'static/html/404.html'
 async def lifespan(_: FastAPI):
     with sqlite3.connect(DATABASE) as conn:
         cur = conn.cursor()
+
         cur.execute('''CREATE TABLE IF NOT EXISTS blog (
             slug TEXT PRIMARY KEY,
             title TEXT,
@@ -70,9 +72,20 @@ async def blog(slug: str):
             <a class="anchor" name="head"></a>
         </div>'''
 
+        ol = False
+        ul = False
+
+        figure_count = 0
+
         for i, line in enumerate(content.split('\n')):
             if line.startswith('#'):
-                # get count of hashes
+                if ol:
+                    final_content += '</ol>'
+                    ol = False
+                elif ul:
+                    final_content += '</ul>'
+                    ul = False
+
                 hashes = len(line.split(' ')[0])
                 tree += f'''<h{hashes + 1}>
                     <a href=\"#h{i}\">{line.strip('#')}</a>
@@ -83,7 +96,31 @@ async def blog(slug: str):
                     <a class="anchor" name="h{i}"></a>
                 </div>'''
             else:
-                final_content += f'<p>{line}</p>'
+                if not ol and not ul:
+                    if line.startswith('1.'):
+                        final_content += '<ol>'
+                        ol = True
+                    elif line.startswith('-'):
+                        final_content += '<ul>'
+                        ul = True
+
+                if ol and re.match(r'\d+\.', line):
+                    line_content = re.sub(r'\d+\.', '', line)
+                    final_content += f'<li>{line_content}</li>'
+                elif ul and line.startswith('-'):
+                    final_content += f'<li>{line.strip("- ")}</li>'
+                elif (m := re.match(r'!\[(.*)\]\((.*)\)', line)):
+                    figure_count += 1
+                    final_content += f'''<figure>
+                        <img src="{m.group(2)}" alt="{m.group(1)}">
+                        <figcaption>
+                            <i>Figure {figure_count}:</i>
+                            {m.group(1)}
+                        </figcaption>
+                    </figure>'''
+                else:
+                    result = re.sub(r'\[(.*)\]\((.*)\)', r'<a href="\2">\1</a>', line)
+                    final_content += f'<p>{result}</p>'
 
 
         return HTMLResponse(template.format(
@@ -128,7 +165,7 @@ async def post_blog_ep(
     with sqlite3.connect(DATABASE) as conn:
         cur = conn.cursor()
         try:
-            cur.execute('INSERT INTO blog (slug, title, content, banner) VALUES (?, ?, ?, ?)', (slug, title, content, banner_url))
+            cur.execute('INSERT INTO blog (slug, title, content, banner_url) VALUES (?, ?, ?, ?)', (slug, title, content, banner_url))
         except sqlite3.IntegrityError:
             return status.HTTP_409_CONFLICT
 

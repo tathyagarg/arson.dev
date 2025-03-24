@@ -28,7 +28,8 @@ body:before {
 
 #sidebar > h1,
 #sidebar > h2,
-#sidebar > h3 {
+#sidebar > h3,
+#sidebar > h4 {
   font-size: 1.25em;
   margin: .5em 0;
   font-weight: normal;
@@ -88,4 +89,16 @@ body:before {
   position: absolute;
   top: -70px;
   left: 0;
+}
+
+#blog li {
+  margin: 1em 0;
+}
+
+#blog a {
+  color: var(--blue);
+}
+
+#blog a:visited {
+  color: var(--sapphire);
 }
