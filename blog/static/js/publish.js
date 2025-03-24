@@ -1,9 +1,22 @@
+let options = document.getElementById("tags");
+fetch("/api/tags")
+  .then(response => response.json())
+  .then(tags => {
+    tags.forEach(tag => {
+      const option = document.createElement("option");
+      option.value = tag;
+      option.text = tag;
+      options.appendChild(option);
+    });
+  });
+
 function handleBlogPost() {
   const slug = document.getElementById("slug").value;
   const title = document.getElementById("title").value;
   const content = document.getElementById("content").files[0];
   const tagsElem = document.getElementById("tags").options;
   const banner_url = document.getElementById("banner_url").value;
+  const summary = document.getElementById("summary").value;
   const authorization = document.getElementById("auth").value;
 
   let tags = [];
@@ -28,6 +41,7 @@ function handleBlogPost() {
         content: new_content,
         tags: tags,
         banner_url: banner_url,
+        summary: summary,
         authorization: authorization
       })
     })
