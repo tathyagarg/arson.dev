@@ -142,8 +142,13 @@ async def articles():
     return FileResponse(ARTICLES)
 
 
+@app.get('/publish')
+async def publish():
+    return FileResponse('static/html/publish.html')
+
+
 @api.post(
-    '/blog',
+    '/publish',
     status_code=status.HTTP_201_CREATED,
     summary='Create a new blog post',
     description='Create a new blog post with a unique slug',
