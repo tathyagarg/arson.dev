@@ -3,7 +3,7 @@ import os
 import re
 from sqlite3 import IntegrityError
 
-from fastapi import FastAPI, status, Body
+from fastapi import FastAPI, Response, status, Body
 import dotenv
 
 from .database import connect
@@ -95,9 +95,11 @@ async def post_blog_ep(
     content: Annotated[str, Body(...)],
     banner_url: Annotated[str, Body(...)],
     summary: Annotated[str, Body(...)],
-    authorization: Annotated[str, Body(...)]
+    authorization: Annotated[str, Body(...)],
+    response: Response
 ):
     if authorization != SECRET_KEY:
+        response.status_code = status.HTTP_401_UNAUTHORIZED
         return status.HTTP_401_UNAUTHORIZED
 
     with connect() as conn:
@@ -111,6 +113,7 @@ async def post_blog_ep(
                 (slug, title, content, html, tree, banner_url, summary)
             )
         except IntegrityError:
+            response.status_code = status.HTTP_409_CONFLICT
             return status.HTTP_409_CONFLICT
 
         for tag in tags:
@@ -138,9 +141,11 @@ async def post_blog_ep(
 async def post_tag_ep(
     name: Annotated[str, Body(...)],
     color: Annotated[str, Body(...)],
-    authorization: Annotated[str, Body(...)]
+    authorization: Annotated[str, Body(...)],
+    response: Response
 ):
     if authorization != SECRET_KEY:
+        response.status_code = status.HTTP_401_UNAUTHORIZED
         return status.HTTP_401_UNAUTHORIZED
 
     with connect() as conn:
@@ -148,17 +153,20 @@ async def post_tag_ep(
         cur.execute('INSERT INTO tag (name, color) VALUES (?, ?) ON CONFLICT DO NOTHING', (name, color))
         conn.commit()
 
-    return status.HTTP_201_CREATED if cur.rowcount else status.HTTP_200_OK
+    status_code = status.HTTP_201_CREATED if cur.rowcount else status.HTTP_200_OK
+    response.status_code = status_code
 
+    return status_code
 
 @api.get('/tag')
-async def get_tag_ep(name: str):
+async def get_tag_ep(name: str, response: Response):
     with connect() as conn:
         cur = conn.cursor()
         cur.execute('SELECT color FROM tag WHERE name = ?', (name,))
         res = cur.fetchone()
 
         if not res:
+            response.status_code = status.HTTP_404_NOT_FOUND
             return status.HTTP_404_NOT_FOUND
 
         return res[0]
@@ -186,13 +194,14 @@ async def get_tags_ep():
         }
     },
 )
-async def get_blog_slug_ep(slug: str):
+async def get_blog_slug_ep(slug: str, response: Response):
     with connect() as conn:
         cur = conn.cursor()
         cur.execute('SELECT title, content, created_at FROM blog WHERE slug = ?', (slug,))
         res = cur.fetchone()
 
         if not res:
+            response.status_code = status.HTTP_404_NOT_FOUND
             return status.HTTP_404_NOT_FOUND
 
         return {'title': res[0], 'content': res[1], 'created_at': res[2]}
