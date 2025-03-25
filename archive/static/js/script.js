@@ -42,3 +42,18 @@ getNavbar.then((data) => {
     updateTheme(localStorage.getItem("theme"));
   });
 });
+
+getFooter = new Promise((resolve, reject) => {
+  fetch("/static/html/footer.html")
+    .then((response) => {
+      return response.text();
+    })
+    .then((data) => {
+      resolve(data);
+    });
+})
+
+getFooter.then((data) => {
+  console.log(data);
+  document.getElementById("footer").innerHTML = data;
+});

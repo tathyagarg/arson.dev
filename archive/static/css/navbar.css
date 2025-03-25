@@ -68,6 +68,8 @@
 #theme-switch-parent {
   display: flex;
   align-items: center;
+
+  position: absolute;
 }
 
 nav {

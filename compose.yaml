@@ -1,0 +1,15 @@
+services:
+  archive:
+    build: ./archive
+    ports:
+      - "8001:8000"
+
+  blog:
+    build: ./blog
+    ports:
+      - "8002:8000"
+
+  nepenthes:
+    build: ./nepenthes
+    ports:
+      - "8003:8000"
