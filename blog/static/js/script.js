@@ -11,7 +11,6 @@ function updateTheme(theme) {
   }
 }
 
-
 let theme = localStorage.getItem("theme");
 if (theme == null) {
   localStorage.setItem("theme", "dark");
@@ -41,4 +40,19 @@ getNavbar.then((data) => {
     localStorage.setItem("theme", e.target.checked ? "light" : "dark");
     updateTheme(localStorage.getItem("theme"));
   });
+});
+
+getFooter = new Promise((resolve, reject) => {
+  fetch("/static/html/footer.html")
+    .then((response) => {
+      return response.text();
+    })
+    .then((data) => {
+      resolve(data);
+    });
+})
+
+getFooter.then((data) => {
+  console.log(data);
+  document.getElementById("footer").innerHTML = data;
 });

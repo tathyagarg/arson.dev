@@ -31,6 +31,9 @@ body {
   padding: 0;
 
   font-family: var(--font);
+
+  display: flex;
+  flex-direction: column;
 }
 
 body:before {
@@ -51,6 +54,11 @@ h1:not(.has-margin) {
   margin: 0;
 }
 
+a {
+  color: var(--blue);
+  text-decoration: none;
+}
+
 #navbar {
   background-color: var(--mantle);
 
@@ -67,6 +75,8 @@ main {
   height: 100%;
   width: 100%;
   margin: 1% auto;
+
+  flex: 1;
 
   display: flex;
   flex-direction: column;
@@ -99,3 +109,26 @@ main {
   border-radius: 0.25em;
 }
 
+footer {
+  width: 100%;
+  background-color: var(--mantle);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: sticky;
+  bottom: 0;
+
+}
+
+footer > div {
+  display: flex;
+  height: 2em;
+  width: fit-content;
+  align-items: center;
+  gap: .5em;
+  padding: 0 0.5em;
+
+  margin: 0 0.5em;
+}

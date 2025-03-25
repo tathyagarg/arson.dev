@@ -37,10 +37,14 @@ function getArticles() {
             <p id="summary"><i>${article.summary}</i></p>
             <p><small>${date}</small></p>
             Tags: ${tagHolder.innerHTML}
-            <hr>
           `;
 
+          const image = document.createElement('img');
+          image.src = article.banner_url;
+          image.alt = article.title;
+
           link.appendChild(div);
+          link.appendChild(image);
           articlesList.appendChild(link);
         });
       });
