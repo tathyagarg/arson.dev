@@ -59,6 +59,10 @@ a {
   text-decoration: none;
 }
 
+a:hover {
+  text-decoration: underline;
+}
+
 #navbar {
   background-color: var(--mantle);
 
@@ -120,6 +124,7 @@ footer {
   position: sticky;
   bottom: 0;
 
+  font-size: 0.75em;
 }
 
 footer > div {
