@@ -2,6 +2,7 @@ from typing import Annotated
 import os
 import re
 from sqlite3 import IntegrityError
+from enum import Enum
 
 from fastapi import FastAPI, Response, status, Body
 import dotenv
@@ -11,7 +12,13 @@ from .database import connect
 dotenv.load_dotenv()
 
 SECRET_KEY = os.getenv('SECRET_KEY')
-DATABASE = 'blog.db' 
+DATABASE = 'blog.db'
+
+class ServerStatus(int, Enum):
+    OK = status.HTTP_200_OK 
+    MAINTENANCE = status.HTTP_503_SERVICE_UNAVAILABLE
+
+STATUS = ServerStatus.OK
 
 api = FastAPI()
 
@@ -244,4 +251,20 @@ async def get_recent_ep():
         return result
 
 
+@api.get('/status')
+async def status_ep(response: Response):
+    response.status_code = STATUS.value
+    return {'status': STATUS.name}
+
+
+@api.post('/status')
+async def set_status_ep(new_status: ServerStatus, authorization: str, response: Response):
+    if authorization != SECRET_KEY:
+        response.status_code = status.HTTP_401_UNAUTHORIZED
+        return status.HTTP_401_UNAUTHORIZED
+
+    global STATUS
+    STATUS = new_status
+
+    return new_status.value
 
