@@ -54,20 +54,22 @@ async def blog(slug: str):
     template = open(BLOG).read()
     with connect() as conn:
         cur = conn.cursor()
-        cur.execute('''SELECT title, html, tree, created_at FROM blog WHERE slug = ?''', (slug,))
+        cur.execute('''SELECT title, html, tree, created_at FROM blog WHERE slug = %s''', (slug,))
         res = cur.fetchone()
 
         if not res:
             return FileResponse(NOT_FOUND, status_code=status.HTTP_404_NOT_FOUND)
 
         title, html, tree, created_at = res
-        cur.execute('SELECT tag_name FROM blog_tag WHERE blog_slug = ?', (slug,))
+        cur.execute('SELECT tag_name FROM blog_tag WHERE blog_slug = %s', (slug,))
         tags = [tag[0] for tag in cur.fetchall()]
 
         colors = {}
         for tag in tags:
-            cur.execute('SELECT color FROM tag WHERE name = ?', (tags[0],))
-            colors[tag] = cur.fetchone()[0]
+            cur.execute('SELECT color FROM tag WHERE name = %s', (tags[0],))
+            if res := cur.fetchone():
+                colors[tag] = res[0]
+
 
         final_tags = [
             f'<span class="tag" style="background-color: {color}">{tag}</span>' for tag, color in colors.items()

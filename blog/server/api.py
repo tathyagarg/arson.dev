@@ -12,7 +12,6 @@ from .database import connect
 dotenv.load_dotenv()
 
 SECRET_KEY = os.getenv('SECRET_KEY')
-DATABASE = 'blog.db'
 
 class ServerStatus(int, Enum):
     OK = status.HTTP_200_OK 
@@ -116,19 +115,25 @@ async def post_blog_ep(
             cur.execute(
                 '''INSERT INTO 
                     blog (slug, title, content, html, tree, banner_url, summary) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?)''',
+                    VALUES (%s, %s, %s, %s, %s, %s, %s)''',
                 (slug, title, content, html, tree, banner_url, summary)
             )
         except IntegrityError:
             response.status_code = status.HTTP_409_CONFLICT
-            return status.HTTP_409_CONFLICT
+            return {
+                'status': status.HTTP_409_CONFLICT,
+                'error': 'Slug already exists'
+            }
 
         for tag in tags:
-            cur.execute('INSERT INTO tag (name) VALUES (?) ON CONFLICT DO NOTHING', (tag,))
-            cur.execute('INSERT INTO blog_tag (blog_slug, tag_name) VALUES (?, ?)', (slug, tag))
+            cur.execute('INSERT INTO tag (name) VALUES (%s) ON CONFLICT DO NOTHING', (tag,))
+            cur.execute('INSERT INTO blog_tag (blog_slug, tag_name) VALUES (%s, %s)', (slug, tag))
         conn.commit()
 
-    return status.HTTP_201_CREATED
+    return {
+        'status': status.HTTP_201_CREATED,
+        'info': 'Blog post created'
+    }
 
 
 @api.post(
@@ -153,30 +158,42 @@ async def post_tag_ep(
 ):
     if authorization != SECRET_KEY:
         response.status_code = status.HTTP_401_UNAUTHORIZED
-        return status.HTTP_401_UNAUTHORIZED
+        return {
+            'status': status.HTTP_401_UNAUTHORIZED,
+            'error': 'Unauthorized'
+        } 
 
     with connect() as conn:
         cur = conn.cursor()
-        cur.execute('INSERT INTO tag (name, color) VALUES (?, ?) ON CONFLICT DO NOTHING', (name, color))
+        cur.execute('INSERT INTO tag (name, color) VALUES (%s, %s) ON CONFLICT DO NOTHING', (name, color))
         conn.commit()
 
     status_code = status.HTTP_201_CREATED if cur.rowcount else status.HTTP_200_OK
     response.status_code = status_code
 
-    return status_code
+    return {
+        'status': status_code,
+        'info': 'Tag created' if status_code == status.HTTP_201_CREATED else 'Tag already exists'
+    }
+
 
 @api.get('/tag')
 async def get_tag_ep(name: str, response: Response):
     with connect() as conn:
         cur = conn.cursor()
-        cur.execute('SELECT color FROM tag WHERE name = ?', (name,))
+        cur.execute('SELECT color FROM tag WHERE name = %s', (name,))
         res = cur.fetchone()
 
         if not res:
             response.status_code = status.HTTP_404_NOT_FOUND
-            return status.HTTP_404_NOT_FOUND
+            return {
+                'status': status.HTTP_404_NOT_FOUND,
+            }
 
-        return res[0]
+        return {
+            'status': status.HTTP_200_OK,
+            'color': res[0]
+        }
 
 
 @api.get(
@@ -204,12 +221,15 @@ async def get_tags_ep():
 async def get_blog_slug_ep(slug: str, response: Response):
     with connect() as conn:
         cur = conn.cursor()
-        cur.execute('SELECT title, content, created_at FROM blog WHERE slug = ?', (slug,))
+        cur.execute('SELECT title, content, created_at FROM blog WHERE slug = %s', (slug,))
         res = cur.fetchone()
 
         if not res:
             response.status_code = status.HTTP_404_NOT_FOUND
-            return status.HTTP_404_NOT_FOUND
+            return {
+                'status': status.HTTP_404_NOT_FOUND,
+                'error': 'Blog post not found'
+            }
 
         return {'title': res[0], 'content': res[1], 'created_at': res[2]}
 
@@ -236,7 +256,7 @@ async def get_recent_ep():
         cur = conn.cursor()
         cur.execute('SELECT slug, title, created_at, banner_url, summary FROM blog ORDER BY created_at DESC LIMIT 5')
         for row in cur.fetchall():
-            cur.execute('SELECT tag_name FROM blog_tag WHERE blog_slug = ?', (row[0],))
+            cur.execute('SELECT tag_name FROM blog_tag WHERE blog_slug = %s', (row[0],))
             tags = [tag[0] for tag in cur.fetchall()]
 
             result.append({

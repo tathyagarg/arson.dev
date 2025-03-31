@@ -1,6 +1,8 @@
-import sqlite3
+import os
 
-DATABASE = 'blog.db'
+from psycopg2 import connect as psql_connect
+
+DATABASE_URL = os.getenv('DATABASE_URL')
 
 def connect():
-    return sqlite3.connect(DATABASE)
+    return psql_connect(DATABASE_URL)
