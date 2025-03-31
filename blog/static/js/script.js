@@ -9,6 +9,13 @@ function updateTheme(theme) {
   for (let variable of variables) {
     root.style.setProperty(`--${variable}`, `var(--${theme}-${variable})`);
   }
+
+  const tags = document.querySelectorAll('.tag');
+  if (tags.length !== 0) {
+    tags.forEach(tag => {
+      tag.style.backgroundColor = theme === 'dark' ? tag.dataset.dark : tag.dataset.light;
+    });
+  }
 }
 
 let theme = localStorage.getItem("theme");

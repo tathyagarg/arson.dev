@@ -219,12 +219,16 @@ async def get_recent_ep():
         cur.execute('SELECT slug, title, created_at, banner_url, summary FROM blog ORDER BY created_at DESC LIMIT 5')
         for row in cur.fetchall():
             cur.execute('''
-                SELECT tag.name, tag.color
+                SELECT tag.name, tag.dark_color, tag.light_color
                 FROM blog_tag
                 JOIN tag ON tag.name = blog_tag.tag_name
                 WHERE blog_tag.blog_slug = %s
             ''', (row[0],))
-            tags = [{'name': tag[0], 'color': tag[1]} for tag in cur.fetchall()]
+            tags = [{
+                'name': tag[0],
+                'dark_color': tag[1],
+                'light_color': tag[2]
+            } for tag in cur.fetchall()]
 
             result.append({
                 'slug': row[0],

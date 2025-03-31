@@ -1,8 +1,13 @@
+var root = document.querySelector(":root");
+
 function fetchTag(tag) {
   const tagElement = document.createElement('span');
   tagElement.classList.add('tag');
   tagElement.textContent = tag.name;
-  tagElement.style.backgroundColor = tag.color;
+  tagElement.dataset.dark = tag.dark_color;
+  tagElement.dataset.light = tag.light_color;
+  tagElement.style.backgroundColor = localStorage.getItem('theme') === 'dark' ? tag.dark_color : tag.light_color;
+
   return Promise.resolve(tagElement);
 }
 

@@ -36,7 +36,7 @@ async def lifespan(_: FastAPI):
             summary TEXT,
             is_archived BOOLEAN DEFAULT FALSE
         )''')
-        cur.execute('CREATE TABLE IF NOT EXISTS tag (name TEXT PRIMARY KEY, color TEXT)')
+        cur.execute('CREATE TABLE IF NOT EXISTS tag (name TEXT PRIMARY KEY, dark_color TEXT, light_color TEXT)')
         cur.execute('''
             CREATE TABLE IF NOT EXISTS blog_tag (
                 blog_slug TEXT,
@@ -69,20 +69,25 @@ async def blog(slug: str):
             return FileResponse(NOT_FOUND, status_code=status.HTTP_404_NOT_FOUND)
 
         title, html, tree, created_at = res
-        colors = {}
+
+        final_tags = []
+
         cur.execute('''
-            SELECT tag.name, tag.color
+            SELECT tag.name, tag.dark_color, tag.light_color
             FROM blog_tag
             JOIN tag ON tag.name = blog_tag.tag_name
             WHERE blog_tag.blog_slug = %s
         ''', (slug,))
-        for tag, color in cur.fetchall():
-            colors[tag] = color
-
-
-        final_tags = [
-            f'<span class="tag" style="background-color: {color}">{tag}</span>' for tag, color in colors.items()
-        ]
+        for tag, dark_color, light_color in cur.fetchall():
+            final_tags.append(f'''
+                <span
+                    class="tag"
+                    data-dark="{dark_color}"
+                    data-light="{light_color}"
+                >
+                    {tag}
+                </span>
+            ''')
 
         tag_div = '<div style="padding: 1em 0;">' + ' '.join(final_tags) + '</div>'
 
@@ -91,7 +96,18 @@ async def blog(slug: str):
             content=html,
             created_at=created_at,
             tags=tag_div,
-            tree=tree
+            tree=tree,
+            postScript='''
+                <script>
+                  const tags = document.querySelectorAll('.tag');
+                  console.log(tags);
+                  if (tags.length !== 0) {
+                    tags.forEach(tag => {
+                      tag.style.backgroundColor = theme === 'dark' ? tag.dataset.dark : tag.dataset.light;
+                    });
+                  }
+                </script>
+            '''
         ))
 
 
