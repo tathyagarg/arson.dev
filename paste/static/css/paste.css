@@ -1,0 +1,49 @@
+#paste-container {
+  flex: 1;
+
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+
+  padding: 1% 5%;
+  box-sizing: border-box;
+}
+
+#paste-container > * {
+  flex-grow: 1;
+  flex-shrink: 0;
+}
+
+#editor {
+  width: clamp(50%, 50%, 80%);
+
+  display: block;
+  overflow: scroll;
+
+  background-color: var(--crust);
+  margin: 0;
+}
+
+#editor code {
+  display: block;
+  overflow: scroll;
+
+  height: 100%;
+  width: 100%;
+
+  padding: 1em;
+  box-sizing: border-box;
+}
+
+#paste-options {
+  padding: 1%;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  background-color: var(--mantle);
+}
+
