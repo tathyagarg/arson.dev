@@ -1,19 +1,16 @@
 function fetchTag(tag) {
-  return fetch(`/api/tag?name=${tag}`)
-    .then(response => response.json())
-    .then(tagData => {
-      const tagElement = document.createElement('span');
-      tagElement.classList.add('tag');
-      tagElement.style.backgroundColor = tagData;
-      tagElement.textContent = tag;
-      return tagElement;
-    });
+  const tagElement = document.createElement('span');
+  tagElement.classList.add('tag');
+  tagElement.textContent = tag.name;
+  tagElement.style.backgroundColor = tag.color;
+  return Promise.resolve(tagElement);
 }
 
 function getArticles() {
   fetch('/api/recent')
     .then(response => response.json())
-    .then(articles => {
+    .then(data => {
+      const articles = data.articles;
       const articlesList = document.getElementById('articles');
       articlesList.innerHTML = ''; // Clear existing content
 
@@ -30,7 +27,7 @@ function getArticles() {
         const tagHolder = document.createElement('div');
 
         Promise.all(article.tags.map(fetchTag)).then(tagElements => {
-          tagElements.forEach(tagElement => tagHolder.appendChild(tagElement));
+          tagElements.forEach(tagElement => {console.log(tagElement); tagHolder.appendChild(tagElement)});
 
           div.innerHTML = `
             <h2>${article.title}</h2>

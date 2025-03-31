@@ -53,6 +53,5 @@ getFooter = new Promise((resolve, reject) => {
 })
 
 getFooter.then((data) => {
-  console.log(data);
   document.getElementById("footer").innerHTML = data;
 });

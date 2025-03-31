@@ -205,48 +205,10 @@ async def get_tags_ep():
     with connect() as conn:
         cur = conn.cursor()
         cur.execute('SELECT name FROM tag')
-        return [tag[0] for tag in cur.fetchall()]
-
-
-@api.get(
-    '/blog/{slug}',
-    summary='Get a blog post',
-    description='Get a blog post by its slug',
-    responses={
-        status.HTTP_404_NOT_FOUND: {
-            'description': 'Blog post not found'
+        return {
+            'status': status.HTTP_200_OK,
+            'tags': [tag[0] for tag in cur.fetchall()]
         }
-    },
-)
-async def get_blog_slug_ep(slug: str, response: Response):
-    with connect() as conn:
-        cur = conn.cursor()
-        cur.execute('SELECT title, content, created_at FROM blog WHERE slug = %s', (slug,))
-        res = cur.fetchone()
-
-        if not res:
-            response.status_code = status.HTTP_404_NOT_FOUND
-            return {
-                'status': status.HTTP_404_NOT_FOUND,
-                'error': 'Blog post not found'
-            }
-
-        return {'title': res[0], 'content': res[1], 'created_at': res[2]}
-
-
-@api.get('/articles')
-async def get_articles_ep():
-    with connect() as conn:
-        cur = conn.cursor()
-        cur.execute('SELECT slug, title, created_at FROM blog')
-        return [
-            {
-                'slug': row[0],
-                'title': row[1],
-                'created_at': row[2]
-            }
-            for row in cur.fetchall()
-        ]
 
 
 @api.get('/recent')
@@ -256,8 +218,13 @@ async def get_recent_ep():
         cur = conn.cursor()
         cur.execute('SELECT slug, title, created_at, banner_url, summary FROM blog ORDER BY created_at DESC LIMIT 5')
         for row in cur.fetchall():
-            cur.execute('SELECT tag_name FROM blog_tag WHERE blog_slug = %s', (row[0],))
-            tags = [tag[0] for tag in cur.fetchall()]
+            cur.execute('''
+                SELECT tag.name, tag.color
+                FROM blog_tag
+                JOIN tag ON tag.name = blog_tag.tag_name
+                WHERE blog_tag.blog_slug = %s
+            ''', (row[0],))
+            tags = [{'name': tag[0], 'color': tag[1]} for tag in cur.fetchall()]
 
             result.append({
                 'slug': row[0],
@@ -268,7 +235,10 @@ async def get_recent_ep():
                 'tags': tags
             })
 
-        return result
+        return {
+            'status': status.HTTP_200_OK,
+            'articles': result
+        }
 
 
 @api.get('/status')

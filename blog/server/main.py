@@ -37,7 +37,14 @@ async def lifespan(_: FastAPI):
             is_archived BOOLEAN DEFAULT FALSE
         )''')
         cur.execute('CREATE TABLE IF NOT EXISTS tag (name TEXT PRIMARY KEY, color TEXT)')
-        cur.execute('CREATE TABLE IF NOT EXISTS blog_tag (blog_slug TEXT, tag_name TEXT, PRIMARY KEY (blog_slug, tag_name))')
+        cur.execute('''
+            CREATE TABLE IF NOT EXISTS blog_tag (
+                blog_slug TEXT,
+                tag_name TEXT,
+                PRIMARY KEY (blog_slug, tag_name),
+                FOREIGN KEY (blog_slug) REFERENCES blog(slug) ON DELETE CASCADE,
+                FOREIGN KEY (tag_name) REFERENCES tag(name) ON DELETE CASCADE
+            )''')
         conn.commit()
 
     yield
@@ -62,14 +69,15 @@ async def blog(slug: str):
             return FileResponse(NOT_FOUND, status_code=status.HTTP_404_NOT_FOUND)
 
         title, html, tree, created_at = res
-        cur.execute('SELECT tag_name FROM blog_tag WHERE blog_slug = %s', (slug,))
-        tags = [tag[0] for tag in cur.fetchall()]
-
         colors = {}
-        for tag in tags:
-            cur.execute('SELECT color FROM tag WHERE name = %s', (tags[0],))
-            if res := cur.fetchone():
-                colors[tag] = res[0]
+        cur.execute('''
+            SELECT tag.name, tag.color
+            FROM blog_tag
+            JOIN tag ON tag.name = blog_tag.tag_name
+            WHERE blog_tag.blog_slug = %s
+        ''', (slug,))
+        for tag, color in cur.fetchall():
+            colors[tag] = color
 
 
         final_tags = [

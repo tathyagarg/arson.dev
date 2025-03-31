@@ -1,7 +1,8 @@
 let options = document.getElementById("tags");
 fetch("/api/tags")
   .then(response => response.json())
-  .then(tags => {
+  .then(data => {
+    const tags = data.tags;
     tags.forEach(tag => {
       const option = document.createElement("option");
       option.value = tag;
