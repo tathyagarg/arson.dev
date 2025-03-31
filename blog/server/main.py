@@ -33,7 +33,8 @@ async def lifespan(_: FastAPI):
             tree TEXT,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             banner_url TEXT,
-            summary TEXT
+            summary TEXT,
+            is_archived BOOLEAN DEFAULT FALSE
         )''')
         cur.execute('CREATE TABLE IF NOT EXISTS tag (name TEXT PRIMARY KEY, color TEXT)')
         cur.execute('CREATE TABLE IF NOT EXISTS blog_tag (blog_slug TEXT, tag_name TEXT, PRIMARY KEY (blog_slug, tag_name))')
