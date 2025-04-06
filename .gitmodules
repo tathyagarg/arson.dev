@@ -1,3 +1,4 @@
 [submodule "dwmun25"]
 	path = dwmun25
 	url = https://github.com/tathyagarg/dwmun25
+  branch = main
