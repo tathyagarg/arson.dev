@@ -37,7 +37,7 @@ services:
     image: docker:24-cli
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./dwmun:/app
+      - ./dwmun25:/app
     working_dir: /app
     command: sh -c "docker-compose up -d --build"
 
