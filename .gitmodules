@@ -2,3 +2,6 @@
 	path = dwmun25
 	url = https://github.com/tathyagarg/dwmun25
   branch = main
+[submodule "concursus"]
+	path = concursus
+	url = https://github.com/concursus-app/concursus

@@ -37,8 +37,16 @@ services:
     image: docker:24-cli
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./dwmun25:/app
-    working_dir: /app
+      - ./dwmun25:/dwmun
+    working_dir: /dwmun
+    command: sh -c "docker-compose up -d --build"
+
+  concursus:
+    image: docker:24-cli
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./concursus:/concursus
+    working_dir: /concursus
     command: sh -c "docker-compose up -d --build"
 
   redis:
