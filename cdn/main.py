@@ -6,5 +6,5 @@ if not os.path.exists("data"):
     os.makedirs("data")
 
 app = FastAPI()
-app.mount("/", StaticFiles(directory="static"), name="static")
+app.mount("/", StaticFiles(directory="data"), name="static")
 
