@@ -37,11 +37,8 @@ services:
     build: ./cdn
     ports:
       - "8007:8000"
-    depends_on:
-      - redis
-    environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
+    volumes:
+      - ./app/data:/app/data
 
   dwmun:
     image: docker:24-cli
