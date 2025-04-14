@@ -41,20 +41,14 @@ services:
       - ./app/data:/app/data
 
   dwmun:
-    image: docker:24-cli
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./dwmun25:/dwmun
-    working_dir: /dwmun
-    command: sh -c "docker-compose up -d --build"
+    build: ./dwmun25/frontend
+    ports:
+      - "8005:3000"
 
   concursus:
-    image: docker:24-cli
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./concursus:/concursus
-    working_dir: /concursus
-    command: sh -c "docker-compose up -d --build"
+    build: ./concursus/frontend
+    ports:
+      - "8006:3000"
 
   redis:
     image: redis:alpine
