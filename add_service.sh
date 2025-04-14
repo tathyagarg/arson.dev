@@ -18,3 +18,5 @@ sed '$i\
   - hostname: '"$NAME.$DOMAIN"'\
     service: http://localhost:'"$PORT"'
 ' $CLOUDFLARED_CONFIG_FILE >temp && sudo mv temp $CLOUDFLARED_CONFIG_FILE
+
+sudo systemctl restart cloudflared
