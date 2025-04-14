@@ -1,5 +1,6 @@
 NAME=$1
 PORT=$2
+RESTART=$3
 
 TUNNEL_NAME="${TUNNEL_NAME:-arson-dev}"
 DOMAIN="${DOMAIN:-arson.dev}"
@@ -19,4 +20,10 @@ sed '$i\
     service: http://localhost:'"$PORT"'
 ' $CLOUDFLARED_CONFIG_FILE >temp && sudo mv temp $CLOUDFLARED_CONFIG_FILE
 
+if [ "$RESTART" = "true" ]; then
+  sudo docker-compose down
+  sudo docker-compose up -d
+else
+  sudo docker-compose up -d $NAME
+fi
 sudo systemctl restart cloudflared
