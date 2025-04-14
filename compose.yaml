@@ -83,6 +83,9 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
     restart: always
+    environment:
+      - "HTTP_ONLY=true"
+
 volumes:
   postgres:
 
