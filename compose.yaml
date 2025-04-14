@@ -38,7 +38,16 @@ services:
     ports:
       - "8007:8000"
     volumes:
-      - ./app/data:/app/data
+      - cdn:/app/data
+
+  webhooks:
+    build: ./webhooks
+    ports:
+      - "8008:8000"
+    depends_on:
+      - postgres
+    environment:
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
 
   dwmun_frontend:
     build: ./dwmun25/frontend
@@ -83,6 +92,7 @@ services:
 volumes:
   postgres:
   portainer_data:
+  cdn:
 
 networks:
   portainer_network:
