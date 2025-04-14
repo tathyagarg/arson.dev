@@ -68,8 +68,6 @@ async def create_listener(
     with connect() as conn:
         cur = conn.cursor()
 
-        if not 
-
         cur.execute("INSERT INTO listeners (listener_id, secret, type, url) VALUES (%s, %s, %s, %s)",
                     (listener_id, secret, type, url))
         conn.commit()
