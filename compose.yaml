@@ -40,13 +40,11 @@ services:
     volumes:
       - ./app/data:/app/data
 
-  dwmun:
   dwmun_frontend:
     build: ./dwmun25/frontend
     ports:
       - "8005:3000"
 
-  concursus:
   concursus_frontend:
     build: ./concursus/frontend
     ports:
