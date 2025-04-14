@@ -10,7 +10,7 @@ if [ -z "$NAME" ] || [ -z "$PORT" ]; then
   exit 1
 fi
 
-cloudflared tunnel route dns add $TUNNEL_NAME $NAME.$DOMAIN
+cloudflared tunnel route dns $TUNNEL_NAME $NAME.$DOMAIN
 
 echo "Creating tunnel for $NAME on port $PORT..."
 
