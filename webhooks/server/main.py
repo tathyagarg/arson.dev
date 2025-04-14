@@ -43,9 +43,9 @@ app = FastAPI(lifespan=lifespan)
 async def receive_update(
     response: Response,
     listener_id: str,
-    x_hub_signature_256: str = Header(),
-    user_agent: str = Header(),
-    payload: dict = Body(...),
+    x_hub_signature_256: Annotated[str, Header()],
+    user_agent: Annotated[str, Header()],
+    payload: Annotated[dict, Body(...)],
 ):
     with connect() as conn:
         cur = conn.cursor()
