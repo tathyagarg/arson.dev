@@ -14,7 +14,7 @@ cloudflared tunnel route dns $TUNNEL_NAME $NAME.$DOMAIN
 
 echo "Creating tunnel for $NAME on port $PORT..."
 
-cat <<EOF >>$CLOUDFLARED_CONFIG_FILE
-  - hostname: $NAME.$DOMAIN
-    service: http://localhost:$PORT
-EOF
+sed '$i\
+  - hostname: '"$NAME.$DOMAIN"'\
+    service: http://localhost:'"$PORT"'
+' $CLOUDFLARED_CONFIG_FILE >temp && sudo mv temp $CLOUDFLARED_CONFIG_FILE
