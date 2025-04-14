@@ -78,15 +78,19 @@ services:
   portainer:
     image: portainer/portainer-ce:latest
     ports:
-      - "9443:9443"
+      - "9000:9000"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
     restart: always
-    environment:
-      - "HTTP_ONLY=true"
+    networks:
+      - portainer_network
 
 volumes:
   postgres:
-
   portainer_data:
+
+networks:
+  portainer_network:
+    driver: bridge
+    name: portainer_network
