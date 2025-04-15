@@ -188,6 +188,33 @@ services:
     networks:
       - monitoring
 
+  registry:
+    image: registry:2
+    container_name: registry
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./registry:/var/lib/registry
+    networks:
+      - portainer_network
+
+  registry-ui:
+    image: joxit/docker-registry-ui:latest
+    container_name: registry-ui
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    environment:
+      REGISTRY_TITLE: "Docker Registry UI"
+      REGISTRY_URL: "http://registry:5000"
+      REGISTRY_AUTH: "false"
+      REGISTRY_API_VERSION: "v2"
+    depends_on:
+      - registry
+    networks:
+      - portainer_network
+
 volumes:
   postgres:
   portainer_data:
