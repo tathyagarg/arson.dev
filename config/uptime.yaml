@@ -1,0 +1,41 @@
+footer:
+  poweredBy: '<img src="https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi"/>'
+  madeWith: '<img src="https://img.shields.io/badge/❤️-red?style=for-the-badge" alt="love">'
+  inspiredBy: '<a href="https://github.com/cyteon/the-watcher">The Watcher</a>'
+  license: >
+    <a href="http://www.wtfpl.net/">
+      <img
+      src="http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl-badge-4.png"
+      width="80"
+      height="15"
+      alt="WTFPL"/>
+    </a>
+
+degradedMultiplier: 1.5
+refreshInterval: 1800
+
+services:
+  archive:
+    name: "Archive"
+    description: "Archive service"
+    url: "https://archive.arson.dev"
+
+  blog:
+    name: "Blog"
+    description: "Blog service"
+    url: "https://blog.arson.dev"
+
+  cdn:
+    name: "CDN"
+    description: "CDN service"
+    url: "https://cdn.arson.dev"
+
+  nepenthes:
+    name: "Nepenthes"
+    description: "Nepenthes service"
+    url: "https://nepenthes.arson.dev"
+
+  paste:
+    name: "Paste"
+    description: "Paste service"
+    url: "https://paste.arson.dev"

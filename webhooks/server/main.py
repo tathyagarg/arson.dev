@@ -1,7 +1,7 @@
 import os
 from typing import Annotated
 
-from fastapi import FastAPI, Header, Body, Response, status
+from fastapi import FastAPI, Body, Request, Response, status
 from contextlib import asynccontextmanager
 
 import psycopg2
@@ -42,10 +42,8 @@ app = FastAPI(lifespan=lifespan)
 @app.post("/listeners/{listener_id}")
 async def receive_update(
     response: Response,
+    request: Request,
     listener_id: str,
-    x_hub_signature_256: str = Header(),
-    user_agent: str = Header(),
-    payload: dict = Body(...),
 ):
     with connect() as conn:
         cur = conn.cursor()

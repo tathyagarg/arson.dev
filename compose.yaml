@@ -1,3 +1,6 @@
+x-log-volume: &log-volume
+  logs:/var/log
+
 services:
   archive:
     build: ./archive
@@ -6,7 +9,10 @@ services:
     depends_on:
       - postgres
     environment:
-      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      LOG_FILE: /var/log/archive.log
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+    volumes:
+    - *log-volume
 
   blog:
     build: ./blog
@@ -15,8 +21,11 @@ services:
     depends_on:
       - postgres
     environment:
-      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
-      - SECRET_KEY=${SECRET_KEY}
+      LOG_FILE: /var/log/blog.log
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      SECRET_KEY:
+    volumes:
+    - *log-volume
 
   # nepenthes:
   #   build: ./nepenthes
@@ -30,8 +39,11 @@ services:
     depends_on:
       - redis
     environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
+      LOG_FILE: /var/log/paste.log
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    volumes:
+    - *log-volume
 
   cdn:
     build: ./cdn
@@ -47,7 +59,10 @@ services:
     depends_on:
       - postgres
     environment:
-      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      LOG_FILE: /var/log/webhooks.log
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+    volumes:
+    - *log-volume
 
   dwmun_frontend:
     build: ./dwmun25/frontend
@@ -72,9 +87,9 @@ services:
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      POSTGRES_DB:
+      POSTGRES_USER:
+      POSTGRES_PASSWORD:
     volumes:
       - postgres:/var/lib/postgresql/data
 
@@ -89,12 +104,58 @@ services:
     networks:
       - portainer_network
 
+  loki:
+    image: grafana/loki:3.0.0
+    container_name: loki
+    restart: unless-stopped
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./config/loki.yaml:/mnt/config/loki.yaml
+      - ./loki-data:/tmp/loki
+    command: -config.file=/mnt/config/loki.yaml
+    networks:
+      - monitoring
+
+  promtail:
+    image: grafana/promtail:3.0.0
+    container_name: promtail
+    restart: unless-stopped
+    volumes:
+      - *log-volume
+      - ./config/promtail.yaml:/mnt/config/promtail.yaml
+    command: -config.file=/mnt/config/promtail.yaml
+    depends_on:
+      - loki
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD:
+    depends_on:
+      - loki
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    networks:
+      - monitoring
+
 volumes:
   postgres:
   portainer_data:
   cdn:
+  grafana-storage:
+  logs:
 
 networks:
   portainer_network:
     driver: bridge
     name: portainer_network
+  monitoring:
+    driver: bridge
+    name: monitoring

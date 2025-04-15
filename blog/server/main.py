@@ -1,10 +1,15 @@
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, status
+from fastapi import FastAPI, Request, Response, status
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.types import ASGIApp
 from dotenv import load_dotenv
 
 import os
+import time
+import logging
+from enum import Enum
 
 from .api import api
 from .database import connect
@@ -13,11 +18,46 @@ from .database import connect
 load_dotenv()
 
 SECRET_KEY = os.getenv('SECRET_KEY')
-DATABASE = 'blog.db' 
+LOG_FILE = os.getenv('LOG_FILE')
+
 INDEX = 'static/html/index.html'
 BLOG = 'static/html/blog.html'
 NOT_FOUND = 'static/html/404.html'
 PUBLISH = 'static/html/publish.html'
+
+logging.basicConfig(
+    filename=LOG_FILE,
+    level=logging.INFO,
+    format='[%(levelname)s] %(message)s',
+)
+
+
+class ServerStatus(int, Enum):
+    OK = status.HTTP_200_OK
+    MAINTAINENCE = status.HTTP_503_SERVICE_UNAVAILABLE
+
+
+STATUS = ServerStatus.OK
+
+
+class LoggingMiddleware(BaseHTTPMiddleware):
+    def __init__(self, app: ASGIApp, base: str) -> None:
+        super().__init__(app)
+        self.base = base
+
+    async def dispatch(self, request: Request, call_next) -> Response:
+        start = time.perf_counter()
+        response = await call_next(request)
+        duration = time.perf_counter() - start
+
+        if 400 <= response.status_code < 500:
+            logging.error(f"{self.base} {request.method} {request.url}: {response.status_code} - {duration:.4f}s")
+        elif 500 <= response.status_code < 600:
+            logging.critical(f"{self.base} {request.method} {request.url}: {response.status_code} - {duration:.4f}s\nRequest Data: {vars(request)}\nResponse Data: {vars(response)}")
+        else:
+            logging.info(f"{self.base} {request.method} {request.url}: {response.status_code} - {duration:.4f}s")
+
+        return response
 
 
 @asynccontextmanager
@@ -51,6 +91,9 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+
+app.add_middleware(LoggingMiddleware, base='app')
+api.add_middleware(LoggingMiddleware, base='api')
 
 @app.get('/')
 async def root():

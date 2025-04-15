@@ -1,21 +1,54 @@
-from fastapi import FastAPI, status
+from fastapi import FastAPI, Request, status
 from fastapi.responses import FileResponse, Response
 from fastapi.staticfiles import StaticFiles
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.types import ASGIApp
 import dotenv
 
 from pathlib import Path
 import json
 from enum import Enum
 import os
+import time
+import logging
 
 dotenv.load_dotenv()
 
 SECRET_KEY = os.getenv('SECRET_KEY')
+LOG_FILE = os.getenv('LOG_FILE', 'app.log')
+
+logging.basicConfig(
+    filename=LOG_FILE,
+    level=logging.INFO,
+    format='[%(levelname)s] %(message)s',
+)
+
+class LoggingMiddleware(BaseHTTPMiddleware):
+    def __init__(self, app: ASGIApp, base: str) -> None:
+        super().__init__(app)
+        self.base = base
+
+    async def dispatch(self, request: Request, call_next) -> Response:
+        start = time.perf_counter()
+        response = await call_next(request)
+        duration = time.perf_counter() - start
+
+        if 400 <= response.status_code < 500:
+            logging.error(f"{self.base} {request.method} {request.url}: {response.status_code} - {duration:.4f}s")
+        elif 500 <= response.status_code < 600:
+            logging.critical(f"{self.base} {request.method} {request.url}: {response.status_code} - {duration:.4f}s\nRequest Data: {vars(request)}\nResponse Data: {vars(response)}")
+        else:
+            logging.info(f"{self.base} {request.method} {request.url}: {response.status_code} - {duration:.4f}s")
+
+        return response
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 api = FastAPI()
+
+app.add_middleware(LoggingMiddleware, base="app")
+api.add_middleware(LoggingMiddleware, base="api")
 
 class ServerStatus(int, Enum):
     OK = status.HTTP_200_OK 
