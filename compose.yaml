@@ -197,7 +197,7 @@ services:
     volumes:
       - ./registry:/var/lib/registry
     networks:
-      - portainer_network
+      - registry_network
 
   registry-ui:
     image: joxit/docker-registry-ui:latest
@@ -206,21 +206,18 @@ services:
     ports:
       - "8081:80"
     environment:
-      REGISTRY_TITLE: "Docker Registry UI"
-      REGISTRY_URL: "http://registry:5000"
-      REGISTRY_AUTH: "false"
-      REGISTRY_API_VERSION: "v2"
+      - NGINX_PROXY_PASS=http://registry:5000
     depends_on:
       - registry
     networks:
-      - portainer_network
+      - registry_network
 
 volumes:
+  cdn:
+  logs:
   postgres:
   portainer_data:
-  cdn:
   grafana-storage:
-  logs:
 
 networks:
   portainer_network:
@@ -229,3 +226,6 @@ networks:
   monitoring:
     driver: bridge
     name: monitoring
+  registry_network:
+    driver: bridge
+    name: registry_network
