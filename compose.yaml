@@ -145,6 +145,35 @@ services:
     networks:
       - monitoring
 
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    restart: unless-stopped
+    pid: "host"
+    ports:
+      - "9100:9100"
+    command:
+      - --path.rootfs=/host
+      - --web.listen-address=:9100
+      - --web.telemetry-path=/metrics
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/host:ro
+    networks:
+      - monitoring
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - monitoring
+
 volumes:
   postgres:
   portainer_data:
