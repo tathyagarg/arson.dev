@@ -17,3 +17,10 @@ scrape_configs:
       job: archive
       __path__: /var/log/archive.log
 
+- job_name: blog
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: blog
+      __path__: /var/log/blog.log
