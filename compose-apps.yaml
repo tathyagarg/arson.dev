@@ -104,90 +104,6 @@ services:
     networks:
       - portainer_network
 
-  loki:
-    image: grafana/loki:3.0.0
-    container_name: loki
-    restart: unless-stopped
-    ports:
-      - "3100:3100"
-    volumes:
-      - ./config/loki.yaml:/mnt/config/loki.yaml
-      - ./loki-data:/mnt/loki
-    command: -config.file=/mnt/config/loki.yaml
-    networks:
-      - monitoring
-
-  promtail:
-    image: grafana/promtail:3.0.0
-    container_name: promtail
-    restart: unless-stopped
-    volumes:
-      - *log-volume
-      - ./config/promtail.yaml:/mnt/config/promtail.yaml
-    command: -config.file=/mnt/config/promtail.yaml
-    depends_on:
-      - loki
-    networks:
-      - monitoring
-
-  grafana:
-    image: grafana/grafana:latest
-    container_name: grafana
-    restart: unless-stopped
-    ports:
-      - "3000:3000"
-    environment:
-      GF_SECURITY_ADMIN_PASSWORD:
-    depends_on:
-      - loki
-    volumes:
-      - grafana-storage:/var/lib/grafana
-    networks:
-      - monitoring
-
-  node-exporter:
-    image: prom/node-exporter:latest
-    container_name: node-exporter
-    restart: unless-stopped
-    pid: "host"
-    ports:
-      - "9100:9100"
-    command:
-      - --path.rootfs=/host
-      - --web.listen-address=:9100
-      - --web.telemetry-path=/metrics
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /:/host:ro
-    networks:
-      - monitoring
-
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: prometheus
-    restart: unless-stopped
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
-    networks:
-      - monitoring
-
-  cadvisor:
-    image: gcr.io/cadvisor/cadvisor:latest
-    container_name: cadvisor
-    restart: unless-stopped
-    ports:
-      - "8080:8080"
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:ro
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-    networks:
-      - monitoring
-
   registry:
     image: registry:2
     container_name: registry
@@ -220,6 +136,7 @@ services:
 volumes:
   cdn:
   logs:
+    external: true
   postgres:
   portainer_data:
   grafana-storage:
@@ -228,9 +145,6 @@ networks:
   portainer_network:
     driver: bridge
     name: portainer_network
-  monitoring:
-    driver: bridge
-    name: monitoring
   registry_network:
     driver: bridge
     name: registry_network
