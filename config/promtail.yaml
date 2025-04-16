@@ -24,3 +24,11 @@ scrape_configs:
     labels:
       job: blog
       __path__: /var/log/blog.log
+
+- job_name: secret-service 
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: tradegeist
+      __path__: /var/log/api_usage.log
