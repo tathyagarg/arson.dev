@@ -35,7 +35,7 @@ services:
     depends_on:
       - loki
     volumes:
-      - grafana-storage:/var/lib/grafana
+      - grafana:/var/lib/grafana
 
   node-exporter:
     image: prom/node-exporter:latest
@@ -75,9 +75,7 @@ services:
       - /var/lib/docker/:/var/lib/docker:ro
 
 volumes:
-  grafana-storage:
-    driver: local
+  grafana:
   loki-data:
-    driver: local
   logs:
     external: true

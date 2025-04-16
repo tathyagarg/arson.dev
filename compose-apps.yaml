@@ -139,7 +139,6 @@ volumes:
     external: true
   postgres:
   portainer_data:
-  grafana-storage:
 
 networks:
   portainer_network:
