@@ -112,24 +112,6 @@ services:
       - "5000:5000"
     volumes:
       - ./registry:/var/lib/registry
-      - /etc/docker/certs:/certs
-    environment:
-      - REGISTRY_HTTP_TLS_CERTIFICATE=/certs/registry.crt
-      - REGISTRY_HTTP_TLS_KEY=/certs/registry.key
-    networks:
-      - registry_network
-
-  registry-ui:
-    image: joxit/docker-registry-ui:latest
-    container_name: registry-ui
-    restart: unless-stopped
-    ports:
-      - "8081:80"
-    environment:
-      - REGISTRY_URL=https://registry.arson.dev:5000
-      - NGINX_PROXY_PASS_URL=https://registry.arson.dev:5000
-    depends_on:
-      - registry
     networks:
       - registry_network
 
