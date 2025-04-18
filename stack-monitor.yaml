@@ -39,6 +39,7 @@ services:
     volumes:
       - grafana:/var/lib/grafana
       - other-data:/mnt/data
+      - ${CONFIG_DIR}/grafana.ini:/etc/grafana/grafana.ini
     deploy:
       replicas: 1
 
