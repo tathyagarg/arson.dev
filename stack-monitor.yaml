@@ -38,6 +38,7 @@ services:
       - loki
     volumes:
       - grafana:/var/lib/grafana
+      - other-data:/mnt/data
     deploy:
       replicas: 1
 
@@ -84,4 +85,6 @@ volumes:
   prometheus:
   loki:
   logs:
+    external: true
+  other-data:
     external: true
