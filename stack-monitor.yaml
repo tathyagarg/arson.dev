@@ -9,7 +9,7 @@ services:
     ports:
       - "3100:3100"
     volumes:
-      - ${CONFIG_DIR}/loki.yaml:/mnt/config/loki.yaml
+      - ${SERV_CONFIG_DIR}/loki.yaml:/mnt/config/loki.yaml
       - loki:/mnt/loki
     command: -config.file=/mnt/config/loki.yaml
     deploy:
@@ -21,7 +21,7 @@ services:
     restart: unless-stopped
     volumes:
       - *log-volume
-      - ${CONFIG_DIR}/promtail.yaml:/mnt/config/promtail.yaml
+      - ${SERV_CONFIG_DIR}/promtail.yaml:/mnt/config/promtail.yaml
     command: -config.file=/mnt/config/promtail.yaml
     depends_on:
       - loki
@@ -39,7 +39,7 @@ services:
     volumes:
       - grafana:/var/lib/grafana
       - other-data:/mnt/data
-      - ${CONFIG_DIR}/grafana.ini:/etc/grafana/grafana.ini
+      - ${SERV_CONFIG_DIR}/grafana.ini:/etc/grafana/grafana.ini
     deploy:
       replicas: 1
 
@@ -67,7 +67,7 @@ services:
       - "9090:9090"
     volumes:
       - prometheus:/prometheus
-      - ${CONFIG_DIR}/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ${SERV_CONFIG_DIR}/prometheus.yml:/etc/prometheus/prometheus.yml
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest

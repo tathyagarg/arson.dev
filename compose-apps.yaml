@@ -112,6 +112,7 @@ services:
       - "5000:5000"
     volumes:
       - registry:/var/lib/registry
+      - ${SERV_CONFIG_DIR}/registry.yml:/etc/docker/registry/config.yml
     networks:
       - registry_network
 
