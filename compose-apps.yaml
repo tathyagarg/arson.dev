@@ -111,7 +111,7 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ./registry:/var/lib/registry
+      - registry:/var/lib/registry
     networks:
       - registry_network
 
@@ -120,6 +120,7 @@ volumes:
   logs:
     external: true
   postgres:
+  registry:
   portainer_data:
 
 networks:
