@@ -113,6 +113,11 @@ services:
     volumes:
       - registry:/var/lib/registry
       - ${SERV_CONFIG_DIR}/registry.yml:/etc/docker/registry/config.yml
+      - ./auth:/auth
+    environment:
+      REGISTRY_AUTH: htpasswd
+      REGISTRY_AUTH_HTPASSWD_REALM: "Registry realm" 
+      REGISTRY_AUTH_HTPASSWD_PATH: /auth/htpasswd
     networks:
       - registry_network
 
