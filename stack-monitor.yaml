@@ -81,15 +81,23 @@ services:
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
 
-  data_http:
-    image: python:3.12-slim
-    container_name: data_http
-    restart: unless-stopped
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.5.1
+    environment:
+    - discovery.type=single-node
+    - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ports:
-      - "1000:1000"
+    - "9200:9200"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+        reservations:
+          cpus: '0.1'
+          memory: 512M
     volumes:
-      - other-data:/data
-    command: python3 -m http.server 1000 --directory /data
+    - ${SERV_CONFIG_DIR}/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
 
 volumes:
   grafana:
