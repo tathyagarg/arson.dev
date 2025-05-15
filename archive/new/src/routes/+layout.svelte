@@ -4,6 +4,8 @@
   import { updateTheme } from "$lib";
 
   import Navbar from "$lib/components/navbar.svelte";
+  import Footer from "$lib/components/footer.svelte";
+
   import "$lib/styles/base.css";
 
   let { children } = $props();
@@ -19,6 +21,4 @@
 
 <Navbar />
 {@render children()}
-
-<style>
-</style>
+<Footer />
