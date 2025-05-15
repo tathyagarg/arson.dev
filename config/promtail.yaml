@@ -33,11 +33,3 @@ scrape_configs:
       job: tradegeist
       __path__: /var/log/api_usage.log
 
-
-- job_name: nginx
-  static_configs:
-  - targets:
-      - localhost
-    labels:
-      job: nginx
-      __path__: /var/log/nginx/arson.log

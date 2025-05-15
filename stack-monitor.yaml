@@ -81,6 +81,16 @@ services:
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
 
+  data_http:
+    image: python:3.12-slim
+    container_name: data_http
+    restart: unless-stopped
+    ports:
+      - "1000:1000"
+    volumes:
+      - /home/tathya/ip2geo/logs:/data/ip2geo
+    command: python3 -m http.server 1000 --directory /data
+
 volumes:
   grafana:
   prometheus:

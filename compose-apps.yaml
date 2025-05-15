@@ -82,6 +82,14 @@ services:
       POSTGRES_PASSWORD:
     volumes:
       - postgres:/var/lib/postgresql/data
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 256M
 
   portainer:
     image: portainer/portainer-ce:latest
