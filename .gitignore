@@ -6,3 +6,5 @@ loki-data
 auth
 
 .DS_Store
+node_modules
+.svelte-kit
