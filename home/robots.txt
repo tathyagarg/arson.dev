@@ -1,4 +1,0 @@
-User-agent: *
-Disallow: /
-
-Sitemap: http://arson.dev/sitemap.xml
