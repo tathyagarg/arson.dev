@@ -20,89 +20,36 @@
 <div class="text-(--text) w-screen flex flex-col items-center gap-4 p-4">
   <h1 class="text-3xl font-black text-(--text)">Archive: Sites</h1>
   <p class="">Here are some sites that I have archived.</p>
-  <div id="site-list">
+  <div class="flex flex-row justify-around w-full">
     {#each siteData as site}
-      <button
-        class="site"
-        onclick={() => (window.location.href = `/sites/${site.name}`)}
+      <div
+        class="w-[20%] p-[1%] box-border bg-(--surface1) rounded-[10px] border-2 border-(--surface2) text-(--text)"
       >
-        <img
-          src={`/sites/${site.name}/favicon.ico`}
-          alt="Site Icon"
-          class="site-icon"
-        />
-        <div class="site-name">{site.title}</div>
-        <div class="site-description">{site.description}</div>
-        <div class="site-tags">
-          <div class="site-domain tag">Domain: {site.domain}</div>
-          <div class="site-source tag">
-            <a href={site.source}>Source</a>
+        <button
+          onclick={() => (window.location.href = `/sites/${site.name}`)}
+          class="w-full cursor-pointer"
+        >
+          <img
+            src={`/sites/${site.name}/favicon.ico`}
+            alt="Site Icon"
+            class="w-full"
+          />
+        </button>
+        <div class="text-center">{site.title}</div>
+        <div class="text-center">{site.description}</div>
+        <div class="flex flex-row flex-wrap gap-1">
+          <div class="bg-(--blue) text-(--base)! px-3 py-1 w-fit rounded-xl">
+            Domain: <a href={site.domain} class="text-(--base)!" target="_blank"
+              >{site.domain}</a
+            >
+          </div>
+          <div
+            class="bg-(--sapphire) text-(--base)! px-3 py-1 w-fit rounded-xl"
+          >
+            <a href={site.source} class="text-(--base)!">Source</a>
           </div>
         </div>
-      </button>
+      </div>
     {/each}
   </div>
 </div>
-
-<style>
-  #site-list {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-
-    width: 100%;
-  }
-
-  .site {
-    width: 20%;
-
-    padding: 1%;
-    box-sizing: border-box;
-
-    background-color: var(--surface1);
-    border-radius: 10px;
-    border: 2px solid var(--surface2);
-    color: var(--text1);
-    text-decoration: none;
-
-    cursor: pointer;
-  }
-
-  .site-icon {
-    width: 100%;
-  }
-
-  .site-name,
-  .site-description {
-    text-align: center;
-  }
-
-  .site-tags {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-
-    gap: 0.25em;
-  }
-
-  .tag {
-    color: var(--base) !important;
-    padding: 0.25em 0.5em;
-    width: fit-content;
-
-    border-radius: 0.75em;
-  }
-
-  .site-domain {
-    background-color: var(--blue);
-  }
-
-  .site-source {
-    background-color: var(--sapphire);
-  }
-
-  .site-source a {
-    color: var(--base);
-    text-decoration: none;
-  }
-</style>
