@@ -21,7 +21,7 @@
 
 <svelte:head>
   <title>Arson.dev - Archive</title>
-  <link rel="icon" href="/favicon.svg" />
+  <link rel="icon" href="/favicon.png" />
 </svelte:head>
 
 <Navbar />
