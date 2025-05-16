@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "/sites/techfusion/static/css/main.6b8ad617.css",
+    "main.js": "/sites/techfusion/static/js/main.2a4cd8ce.js",
+    "static/js/453.608812a5.chunk.js": "/sites/techfusion/static/js/453.608812a5.chunk.js",
+    "static/media/background.jpeg": "/sites/techfusion/static/media/background.763ef4e3ca59ff467e35.jpeg",
+    "static/media/qr.png": "/sites/techfusion/static/media/qr.7926c91202ea429c5970.png",
+    "static/media/Agrandir-GrandHeavy.otf": "/sites/techfusion/static/media/Agrandir-GrandHeavy.543cbb93e2f4479f4c39.otf",
+    "static/media/home.png": "/sites/techfusion/static/media/home.277b20605a20a7748ac7.png",
+    "static/media/window-icon.png": "/sites/techfusion/static/media/window-icon.cd10f2ec93d7088229a7.png",
+    "static/media/arrow.png": "/sites/techfusion/static/media/arrow.ee78af88173e1dce579f.png",
+    "static/media/Aurora.otf": "/sites/techfusion/static/media/Aurora.a5a779f2bd8199b644dd.otf",
+    "static/media/search.png": "/sites/techfusion/static/media/search.53f3edb8212bcca8ea61.png",
+    "index.html": "/sites/techfusion/index.html",
+    "static/media/flag.zip": "/sites/techfusion/static/media/flag.287bc14a3b43bc533ac5.zip",
+    "main.6b8ad617.css.map": "/sites/techfusion/static/css/main.6b8ad617.css.map",
+    "main.2a4cd8ce.js.map": "/sites/techfusion/static/js/main.2a4cd8ce.js.map",
+    "453.608812a5.chunk.js.map": "/sites/techfusion/static/js/453.608812a5.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.6b8ad617.css",
+    "static/js/main.2a4cd8ce.js"
+  ]
+}

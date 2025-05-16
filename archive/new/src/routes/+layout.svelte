@@ -19,6 +19,11 @@
   });
 </script>
 
+<svelte:head>
+  <title>Arson.dev - Archive</title>
+  <link rel="icon" href="/favicon.svg" />
+</svelte:head>
+
 <Navbar />
 {@render children()}
 <Footer />

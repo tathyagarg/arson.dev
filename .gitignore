@@ -4,3 +4,5 @@ __pycache__/
 .env
 loki-data
 auth
+
+.DS_Store
