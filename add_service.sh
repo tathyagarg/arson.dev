@@ -1,29 +1,18 @@
-NAME=$1
-PORT=$2
-RESTART=$3
+PORT=$1
+NAME=$2
 
-TUNNEL_NAME="${TUNNEL_NAME:-arson-dev}"
-DOMAIN="${DOMAIN:-arson.dev}"
-CLOUDFLARED_CONFIG_FILE="${CLOUDFLARED_CONFIG_FILE:-/etc/cloudflared/config.yml}"
-
-if [ -z "$NAME" ] || [ -z "$PORT" ]; then
-  echo "Usage: $0 <service-name> <port>"
-  exit 1
+if [ -z "$NAME" ]; then
+  NAME=$(basename "$PWD")
 fi
 
-cloudflared tunnel route dns $TUNNEL_NAME $NAME.$DOMAIN
+echo "Building service"
 
-echo "Creating tunnel for $NAME on port $PORT..."
+npm i
+npm run build
 
-sed '$i\
-  - hostname: '"$NAME.$DOMAIN"'\
-    service: http://localhost:'"$PORT"'
-' $CLOUDFLARED_CONFIG_FILE >temp && sudo mv temp $CLOUDFLARED_CONFIG_FILE
+echo "Starting $NAME on port $PORT"
 
-if [ "$RESTART" = "true" ]; then
-  sudo docker-compose down
-  sudo docker-compose up -d
-else
-  sudo docker-compose up -d $NAME
-fi
-sudo systemctl restart cloudflared
+pm2 delete $NAME
+pm2 start dist/index.js --name $NAME -- $PORT
+
+echo "Service $NAME started on port $PORT"
