@@ -8,12 +8,17 @@ generator client {
 }
 
 model Post {
-  id      Int    @id @default(autoincrement())
-  title   String
+  id    Int    @id @default(autoincrement())
+  title String
+  slug  String @unique
+
   content String // markdown
-  tags    Tag[]  @relation("PostTags")
+  excerpt String @default("")
+
+  tags Tag[] @relation("PostTags")
 
   createdAt DateTime @default(now())
+  thumbnail String?
 }
 
 model Tag {

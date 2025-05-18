@@ -1,6 +1,5 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { PASSPHRASE } from '$env/static/private';
+import prisma from '$lib/server/prisma';
 
 export async function GET(tag) {
   const posts = await prisma.post.findMany({
@@ -23,7 +22,15 @@ export async function GET(tag) {
 
 export async function POST({ request }) {
   const body = await request.json();
-  const { name, color } = body;
+  const { name, color, passphrase } = body;
+  if (passphrase !== PASSPHRASE) {
+    return new Response('Invalid passphrase', {
+      status: 403,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  }
 
   const tag = await prisma.tag.create({
     data: {

@@ -18,4 +18,3 @@ export function updateTheme(theme: string) {
     );
   }
 }
-
