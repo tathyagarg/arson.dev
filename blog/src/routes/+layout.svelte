@@ -1,5 +1,6 @@
 <script lang="ts">
   import "../app.css";
+
   import { onMount } from "svelte";
   import { updateTheme } from "$lib";
 
@@ -20,8 +21,9 @@
 </script>
 
 <svelte:head>
-  <title>Arson.dev - Archive</title>
+  <title>Arson.dev - Blog</title>
   <link rel="icon" href="/favicon.png" />
+  <link rel="stylesheet" href="https://prismjs.catppuccin.com/macchiato.css" />
 </svelte:head>
 
 <Navbar />

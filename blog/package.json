@@ -26,6 +26,7 @@
 	"dependencies": {
 		"@prisma/client": "^6.8.2",
 		"prisma": "^6.8.2",
+		"prismjs": "^1.30.0",
 		"strftime": "^0.10.3"
 	}
 }

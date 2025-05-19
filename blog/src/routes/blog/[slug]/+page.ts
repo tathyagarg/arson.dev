@@ -9,7 +9,16 @@ export const load: PageLoad = async ({ fetch, params }) => {
 
   if (res.ok) {
     const post = await res.json();
-    return { post };
+
+    const { content } = post;
+    const resp = await fetch('https://md.arson.dev/convert', {
+      method: 'POST',
+      body: content,
+    })
+
+    const html = await resp.text()
+
+    return { html };
   }
 
   throw error(404, 'Post not found');
