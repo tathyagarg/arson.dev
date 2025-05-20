@@ -12,7 +12,6 @@ npm run build
 
 echo "Starting $NAME on port $PORT"
 
-pm2 delete $NAME
-pm2 start dist/index.js --name $NAME -- $PORT
+pm2 restart $NAME
 
 echo "Service $NAME started on port $PORT"

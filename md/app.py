@@ -15,6 +15,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+def to_slug(text: str) -> str:
+    return re.sub(r'[^a-zA-Z0-9]+', '-', text).strip('-').lower()
+
+def heading_maker_factory(level: int):
+    def heading_maker(match: re.Match) -> str:
+        text = match.group(2)
+        slug = to_slug(text)
+        return f'<h{level} id="{slug}" style="scroll-margin-top: 4rem">{text}</h{level}>'
+
+    return heading_maker
+
+
 @app.get('/')
 async def root():
     return {'message': 'Markdown to HTML converter', 'doc': 'Send a POST request to /convert with markdown text in the body.'}
@@ -25,7 +37,8 @@ async def convert(markdown: Annotated[str, Body(...)]):
 
     # Convert headers
     for i in range(6, 0, -1):
-        html = re.sub(rf'{"#" * i} (.*?)\n', rf'<h{i}>\1</h{i}>', html)
+        html = re.sub(r'^(#{%d}) (.*)' % i, heading_maker_factory(i), html, flags=re.MULTILINE)
+
 
     # Convert text styles
     html = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', html)
@@ -47,3 +60,19 @@ async def convert(markdown: Annotated[str, Body(...)]):
     html = re.sub(r'```(.*?)\n(.*?)```', r'<pre><code class="language-\1">\2</code></pre>', html, flags=re.DOTALL)
 
     return HTMLResponse(content=html, media_type='text/html')
+
+@app.post('/headers')
+async def headers(markdown: Annotated[str, Body(...)]):
+    """ return list of headers in the markdown in order of occurence """
+    headers = []
+
+    for line in markdown.splitlines():
+        if (m := re.match(r'^(#+) (.*)', line)):
+            text = m.group(2)
+            headers.append({
+                'level': len(m.group(1)),
+                'text': text,
+                'href': to_slug(text),
+            })
+
+    return headers
