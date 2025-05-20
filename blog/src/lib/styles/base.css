@@ -65,7 +65,7 @@ a:hover {
   width: 100%;
   display: flex;
 
-  position: sticky;
+  position: fixed;
   top: 0;
 
   z-index: 1000;
@@ -109,6 +109,9 @@ main {
 footer {
   width: 100%;
   background-color: var(--mantle);
+
+  position: fixed;
+  bottom: 0;
 
   display: flex;
   justify-content: center;

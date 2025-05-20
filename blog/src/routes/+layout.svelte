@@ -27,5 +27,7 @@
 </svelte:head>
 
 <Navbar />
-{@render children()}
+<div class="py-10">
+  {@render children()}
+</div>
 <Footer />
