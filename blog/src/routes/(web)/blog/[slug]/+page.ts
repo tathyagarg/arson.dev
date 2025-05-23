@@ -1,25 +1,27 @@
 import type { PageLoad } from './$types';
 import { error } from '@sveltejs/kit';
 
+import { PUBLIC_ENV } from '$env/static/public';
+
+const MD_API_URL = PUBLIC_ENV === 'production' ? 'https://md.arson.dev' : 'http://localhost:8000';
+
 export const load: PageLoad = async ({ fetch, params }) => {
   const { slug } = params;
-  console.log(slug);
 
-  const res = await fetch(`/api/post?slug=${slug}`);
+  const res = await fetch(`/api/posts?slug=${slug}`);
 
   if (res.ok) {
     const post = await res.json();
 
     const { content } = post;
-    // const resp = await fetch('https://md.arson.dev/convert', {
-    const resp = await fetch('http://localhost:8000/convert', {
+    const resp = await fetch(`${MD_API_URL}/convert`, {
       method: 'POST',
       body: content,
     })
 
     const html = await resp.text()
 
-    const headers = await fetch('http://localhost:8000/headers', {
+    const headers = await fetch(`${MD_API_URL}/headers`, {
       method: 'POST',
       body: content,
     });

@@ -19,6 +19,9 @@ model Post {
 
   createdAt DateTime @default(now())
   thumbnail String?
+
+  published Boolean @default(true)
+  archived  Boolean @default(false)
 }
 
 model Tag {
