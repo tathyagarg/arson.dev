@@ -17,12 +17,9 @@
   ],
   "components": {
     "schemas": {
-      "Post": {
+      "RequestPost": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer"
-          },
           "title": {
             "type": "string"
           },
@@ -35,10 +32,6 @@
           "excerpt": {
             "type": "string"
           },
-          "createdAt": {
-            "type": "string",
-            "format": "%Y-%m-%dT%H:%M:%S.%fZ"
-          },
           "thumbnail": {
             "type": "string"
           },
@@ -49,6 +42,26 @@
             "type": "boolean"
           }
         }
+      },
+      "Post": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RequestPost"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "createdAt": {
+                "type": "string",
+                "format": "%Y-%m-%dT%H:%M:%SZ"
+              },
+              "id": {
+                "type": "number"
+              }
+            }
+          }
+        ]
       }
     }
   },
@@ -106,6 +119,32 @@
                 "schema": {
                   "type": "string"
                 }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new blog post",
+        "requestBody": {
+          "required": true,
+          "description": "Blog post data",
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/RequestPost"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "passphrase": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                ]
               }
             }
           }

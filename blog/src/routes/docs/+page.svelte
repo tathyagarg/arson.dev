@@ -12,4 +12,8 @@
   });
 </script>
 
+<svelte:head>
+  <link rel="stylesheet" href="/swagger-dark.css" />
+</svelte:head>
+
 <div id="swagger-ui"></div>
