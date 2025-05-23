@@ -1,5 +1,5 @@
 import { PASSPHRASE } from '$env/static/private';
-import prisma from '$lib/server/prisma';
+import prisma, { PostRequest } from '$lib/server/prisma';
 
 export async function GET(event) {
   const params = event.url.searchParams;
@@ -31,7 +31,7 @@ export async function GET(event) {
 
 export async function POST({ request }) {
   const body = await request.json();
-  const { title, slug, content, excerpt, tagNames, passphrase } = body;
+  const { passphrase, ...postData } = body;
 
   if (passphrase !== PASSPHRASE) {
     return new Response('Invalid passphrase', {
@@ -45,17 +45,16 @@ export async function POST({ request }) {
   const tags = await prisma.tag.findMany({
     where: {
       name: {
-        in: tagNames,
+        in: postData.tagNames,
       },
     },
   })
 
+  let { tagNames, ...createData } = postData;
+
   const post = await prisma.post.create({
     data: {
-      slug,
-      title,
-      content,
-      excerpt,
+      ...createData,
       tags: {
         connect: tags
       }
