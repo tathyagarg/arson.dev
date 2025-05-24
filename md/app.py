@@ -26,6 +26,12 @@ def heading_maker_factory(level: int):
 
     return heading_maker
 
+def make_codeblock(match) -> str:
+    lang = match.group(1)
+    filename = match.group(2) or ''
+    startline = match.group(3) or '1'
+    content = match.group(4).strip()
+    return f'<pre class="language-{lang} line-numbers" data-start="{startline}" data-filename="{filename}" style="padding-top: {"2.5em"*(filename != '')}"><code>{content}</code></pre>'
 
 @app.get('/')
 async def root():
@@ -57,7 +63,7 @@ async def convert(markdown: Annotated[str, Body(...)]):
     html = re.sub(r'^(\d+)\. (.*?)\n', r'<ol>\n<li>\2</li>\n</ol>', html, flags=re.MULTILINE)
     html = re.sub(r'</ol><ol>', '', html)
 
-    html = re.sub(r'```(.*?)\n(.*?)```', r'<pre><code class="language-\1">\2</code></pre>', html, flags=re.DOTALL)
+    html = re.sub(r'```([a-z]*?)(?:\{([a-zA-Z0-9\.]+)\})?(?:\{(\d+)\})?\n(.*?)```', make_codeblock, html, flags=re.DOTALL)
 
     return HTMLResponse(content=html, media_type='text/html')
 

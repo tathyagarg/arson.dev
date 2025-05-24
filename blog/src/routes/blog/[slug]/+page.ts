@@ -13,7 +13,7 @@ export const load: PageLoad = async ({ fetch, params }) => {
   if (res.ok) {
     const post = await res.json();
 
-    const { content } = post;
+    const { title, content } = post;
     const resp = await fetch(`${MD_API_URL}/convert`, {
       method: 'POST',
       body: content,
@@ -28,7 +28,7 @@ export const load: PageLoad = async ({ fetch, params }) => {
 
     const headersText = await headers.json();
 
-    return { html, headers: headersText };
+    return { html, headers: headersText, title };
   }
 
   throw error(404, 'Post not found');

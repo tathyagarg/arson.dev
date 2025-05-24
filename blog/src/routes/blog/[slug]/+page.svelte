@@ -4,7 +4,9 @@
   import { onMount } from "svelte";
 
   let { data }: PageProps = $props();
-  let { html, headers } = data;
+  let { html, headers, title } = data;
+
+  console.log(html);
 
   onMount(() => {
     Prism.highlightAll();
@@ -23,7 +25,9 @@
       {/each}
     </div>
   </div>
-  <div class="prose flex-1 my-10 ml-[27.5%]">
+  <div class="prose my-10 ml-[27.5%] min-w-[67.5%]">
+    <h1 class="text-(--text) text-6xl mb-4">{title}</h1>
+    <hr class="w-full" />
     {@html html}
   </div>
 </div>
