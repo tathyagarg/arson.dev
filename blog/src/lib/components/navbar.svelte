@@ -16,7 +16,7 @@
   });
 </script>
 
-<div id="bg-(--mantle) wi-full flex fixed top0 z-1000">
+<div class="bg-(--mantle) w-full flex fixed top-0 z-1000">
   <div class="flex items-center absolute">
     <span class="text-2xl m-2">🌙</span>
     <label class="relative inline-block w-[60px] h-[34px]">
