@@ -32,7 +32,7 @@ async def root():
 @app.get('/webhooks')
 async def get_webhooks():
     webhooks = Listener.select()
-    return [webhook.__data__ for webhook in webhooks]
+    return [{'id': webhook.id, 'name': webhook.name, 'verification_type': webhook.verification_type} for webhook in webhooks]
 
 
 @app.post('/webhooks')
