@@ -41,7 +41,13 @@
           "archived": {
             "type": "boolean"
           }
-        }
+        },
+        "required": [
+          "title",
+          "content",
+          "slug",
+          "excerpt"
+        ]
       },
       "Post": {
         "type": "object",
@@ -65,11 +71,20 @@
       }
     }
   },
+  "tags": [
+    {
+      "name": "posts",
+      "description": "Operations related to blog posts"
+    }
+  ],
   "paths": {
     "/posts": {
       "summary": "Get or create a blog post",
       "get": {
         "summary": "Get post data by slug",
+        "tags": [
+          "posts"
+        ],
         "parameters": [
           {
             "name": "slug",
@@ -126,6 +141,9 @@
       },
       "post": {
         "summary": "Create a new blog post",
+        "tags": [
+          "posts"
+        ],
         "requestBody": {
           "required": true,
           "description": "Blog post data",
@@ -145,6 +163,28 @@
                     }
                   }
                 ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Blog post created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Post"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
               }
             }
           }

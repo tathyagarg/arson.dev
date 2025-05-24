@@ -35,7 +35,7 @@ export async function POST({ request }) {
 
   if (passphrase !== PASSPHRASE) {
     return new Response('Invalid passphrase', {
-      status: 403,
+      status: 401,
       headers: {
         'Content-Type': 'application/json',
       },

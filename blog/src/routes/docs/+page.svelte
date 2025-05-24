@@ -13,6 +13,7 @@
 </script>
 
 <svelte:head>
+  <title>Arson.dev Blog API Documentation</title>
   <link rel="stylesheet" href="/swagger-dark.css" />
 </svelte:head>
 

@@ -16,7 +16,7 @@
   });
 </script>
 
-<div id="navbar">
+<div id="bg-(--mantle) wi-full flex fixed top0 z-1000">
   <div class="flex items-center absolute">
     <span class="text-2xl m-2">🌙</span>
     <label class="relative inline-block w-[60px] h-[34px]">
@@ -30,6 +30,7 @@
   <nav class="bg-(--mantle) w-full flex">
     <ul class="mt-[1em] mb-[1em] flex flex-row justify-around w-full list-none">
       <li><a href="/" class="text-(--text)! no-underline">Home</a></li>
+      <li><a href="/docs" class="text-(--text)! no-underline">API Docs</a></li>
     </ul>
   </nav>
 </div>
