@@ -2,31 +2,6 @@ x-log-volume: &log-volume
   logs:/var/log
 
 services:
-  archive:
-    build: ./archive
-    ports:
-      - "8001:8000"
-    depends_on:
-      - postgres
-    environment:
-      LOG_FILE: /var/log/archive.log
-      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
-    volumes:
-    - *log-volume
-
-  blog:
-    build: ./blog
-    ports:
-      - "8002:8000"
-    depends_on:
-      - postgres
-    environment:
-      LOG_FILE: /var/log/blog.log
-      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
-      SECRET_KEY:
-    volumes:
-    - *log-volume
-
   # nepenthes:
   #   build: ./nepenthes
   #   ports:
@@ -51,18 +26,6 @@ services:
       - "8007:8000"
     volumes:
       - cdn:/app/data
-
-  webhooks:
-    build: ./webhooks
-    ports:
-      - "8008:8000"
-    depends_on:
-      - postgres
-    environment:
-      LOG_FILE: /var/log/webhooks.log
-      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
-    volumes:
-    - *log-volume
 
   redis:
     image: redis:alpine
