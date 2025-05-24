@@ -56,7 +56,7 @@ async def create_webhook(listener_data: ListenerModel, passphrase: Annotated[str
         return {"error": str(e)}, 400
 
 
-@app.post('/webhooks/{webhook}')
+@app.post('/listeners/{webhook}')
 async def handle_webhook(webhook: str, request: Request):
     listener = Listener.get_or_none(Listener.name == webhook)
     if not listener:
