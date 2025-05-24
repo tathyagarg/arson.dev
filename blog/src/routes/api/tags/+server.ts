@@ -1,7 +1,9 @@
 import { PASSPHRASE } from '$env/static/private';
 import prisma from '$lib/server/prisma';
 
-export async function GET(tag) {
+export async function GET({ url }) {
+  const tag = url.searchParams.get('tag');
+
   const posts = await prisma.post.findMany({
     where: {
       tags: {

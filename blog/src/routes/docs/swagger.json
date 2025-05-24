@@ -13,6 +13,10 @@
     {
       "url": "https://blog.arson.dev/api",
       "description": "Production server"
+    },
+    {
+      "url": "http://localhost:5173/api",
+      "description": "Development server"
     }
   ],
   "components": {
@@ -68,6 +72,21 @@
             }
           }
         ]
+      },
+      "Tag": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "color": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "color"
+        ]
       }
     }
   },
@@ -75,6 +94,10 @@
     {
       "name": "posts",
       "description": "Operations related to blog posts"
+    },
+    {
+      "name": "tags",
+      "description": "Operations related to tags"
     }
   ],
   "paths": {
@@ -180,6 +203,127 @@
           },
           "401": {
             "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tags": {
+      "summary": "Tag operations",
+      "get": {
+        "summary": "Get posts by tag name",
+        "tags": [
+          "tags"
+        ],
+        "parameters": [
+          {
+            "name": "tag",
+            "in": "query",
+            "required": false,
+            "description": "The name of the tag to retrieve",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of posts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Post"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new tag",
+        "tags": [
+          "tags"
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Tag data",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "color": {
+                    "type": "string"
+                  },
+                  "passphrase": {
+                    "type": "string",
+                    "description": "Passphrase for tag creation"
+                  }
+                },
+                "required": [
+                  "name",
+                  "color",
+                  "passphrase"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Tag created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tag"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
             "content": {
               "text/plain": {
                 "schema": {
