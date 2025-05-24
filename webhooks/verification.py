@@ -26,4 +26,4 @@ async def validate_github_push_event(listener_data: str, request: Request) -> tu
     return {"message": "GitHub push event validated successfully"}, True
 
 
-VALIDATORS = [GITHUB_PUSH_EVENT]
+VALIDATORS = [validate_github_push_event]

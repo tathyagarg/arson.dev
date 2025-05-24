@@ -64,9 +64,9 @@ async def handle_webhook(webhook: str, request: Request):
         return {"error": "Invalid verification type"}, 400
 
     verification_function = VALIDATORS[listener.verification_type]
-    _, status_code = await verification_function(listener.__data__, request)
+    _, verified = await verification_function(listener.other_data, request)
 
-    if not status_code:
+    if not verified:
         return {"error": "Verification failed"}, 400
 
     module = __import__(f'handlers.{listener.name}', fromlist=['handler'])
@@ -75,7 +75,7 @@ async def handle_webhook(webhook: str, request: Request):
     if not handler_function:
         return {"error": "Handler function not found"}, 500
 
-    response_code = handler_function(request)
+    response_code = await handler_function(request)
 
     return {"message": "Webhook handled successfully"}, response_code
 
