@@ -41,6 +41,8 @@ async def create_webhook(listener_data: ListenerModel, passphrase: Annotated[str
         return {"error": "Invalid passphrase"}, 401
 
     try:
+        os.makedirs('handlers', exist_ok=True)
+
         with open(f'handlers/{listener_data.name}.py', 'w') as f:
             f.write(listener_data.handler)
 
