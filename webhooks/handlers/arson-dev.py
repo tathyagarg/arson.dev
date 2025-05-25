@@ -1,8 +1,22 @@
 from fastapi import Request
 import os
 
-def redeploy_blog():
-    os.system('cd /home/tathya/arson.dev/blog && npm run build && pm2 restart blog')
+HOME = '/home/tathya'
+
+def redeploy_sveltekit(name: str):
+    os.system(f'cd {HOME}/{name} && npm run build && pm2 restart {name}')
+
+
+def redeploy_fastapi(name: str):
+    os.system(f"systemctl --user restart {name}")
+
+
+SERVICES = {
+    'archive': redeploy_sveltekit,
+    'blog': redeploy_sveltekit,
+    'md': redeploy_fastapi,
+    'webhooks': redeploy_fastapi,
+}
 
 
 async def handler(request: Request):
@@ -17,8 +31,9 @@ async def handler(request: Request):
             changed_files.append(changed_file)
 
     for file in changed_files:
-        if file.startswith('blog/'):
-            redeploy_blog()
+        root, _ = os.path.split(file)
+        if root in SERVICES:
+            SERVICES[root](root)
 
     return 200
 
