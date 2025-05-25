@@ -2,18 +2,30 @@ from fastapi import Request
 import subprocess
 import os
 from pathlib import Path
+import io
 import datetime
 
 HOME = Path.home()
 LOG_DIR = HOME / 'logs' / 'arson-dev'
 
-def redeploy_service_factory(steps: list[str], log_file_path: Path = LOG_DIR):
+def log_event(event: str, log_file: Path , execution_queue: list[str]):
+    with open(log_file, 'a') as log:
+        log.write(f"[{len(execution_queue)}] - {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {event}\n")
+
+def execute_command(command: str, cwd: Path, log_file: io.TextIOWrapper, execution_queue: list[str]) -> int:
+    execution_queue.append(command)
+    log_event(f"Executing command: {command} in {cwd}", Path(log_file.name), execution_queue)
+    status = subprocess.run(command, shell=True, cwd=cwd, stdout=log_file, stderr=log_file).returncode
+
+    return status
+
+def redeploy_service_factory(steps: list[str], log_file_path: Path = LOG_DIR, execution_queue: list[str] = []):
     def redeploy_service(name: str, log_file_name: str):
         for i, step in enumerate(steps, 1):
             with open(log_file_path / log_file_name, 'a') as log_file:
-                log_file.write(f'Step {i} for {name}: {step}\n')
+                log_file.write(f'Step {i} for {name}: {step.format(name=name)}\n')
 
-                status = subprocess.run(step.format(name=name), shell=True, cwd=HOME / 'arson.dev' / name, stdout=log_file, stderr=log_file).returncode
+                status = execute_command(step.format(name=name), HOME / 'arson.dev' / name, log_file, execution_queue)
 
                 log_file.write(f'Step {i} for {name} completed with status {status}\n')
 
@@ -39,9 +51,11 @@ async def handler(request: Request):
 
     logfile = f'redeploy-{now}.log'
 
-    with open(LOG_DIR / logfile, 'a') as log_file:
-        log_file.write(f"Received data: {data}\n")
-        subprocess.run("git pull", shell=True, cwd=HOME / 'arson.dev', stdout=log_file, stderr=log_file)
+    execution_queue = []
+
+    with open(LOG_DIR / logfile, 'a') as log:
+        log_event(f"Received request with data: {data}", LOG_DIR / logfile, execution_queue)
+        execute_command('git pull', HOME / 'arson.dev', log, execution_queue)
 
     changed_files = []
 
@@ -56,7 +70,10 @@ async def handler(request: Request):
             log_file.write(f"Processing file: {file} with root {root!r}\n")
 
         if root in SERVICES:
+            log_event("Redeploying service: {root}", LOG_DIR / logfile, execution_queue)
             SERVICES[root](root, logfile)
+
+    log_event(f"Redeployment process completed, commands run: {execution_queue}", LOG_DIR / logfile, execution_queue)
 
     return 200
 
