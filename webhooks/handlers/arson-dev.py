@@ -50,7 +50,7 @@ async def handler(request: Request):
             changed_files.append(changed_file)
 
     for file in changed_files:
-        root, _ = os.path.split(file)
+        root = Path(file).parts[0]
 
         with open(LOG_DIR / logfile, 'a') as log_file:
             log_file.write(f"Processing file: {file} with root {root!r}\n")
