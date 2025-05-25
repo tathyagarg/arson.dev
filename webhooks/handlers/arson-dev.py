@@ -20,7 +20,7 @@ def redeploy_service_factory(steps: list[str], log_file_path: Path = LOG_DIR):
     return redeploy_service
 
 
-redeploy_sveltekit = redeploy_service_factory(['npm i', 'npm run build', 'pm2 restart {name'])
+redeploy_sveltekit = redeploy_service_factory(['npm i', 'npm run build', 'pm2 restart {name}'])
 redeploy_fastapi = redeploy_service_factory(['source ../.venv/bin/activate', 'pip install -r requirements.txt', 'systemctl --user restart {name}'])
 
 SERVICES = {
@@ -51,6 +51,10 @@ async def handler(request: Request):
 
     for file in changed_files:
         root, _ = os.path.split(file)
+
+        with open(LOG_DIR / logfile, 'a') as log_file:
+            log_file.write(f"Processing file: {file} with root {root!r}\n")
+
         if root in SERVICES:
             SERVICES[root](root, logfile)
 
