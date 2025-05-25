@@ -35,7 +35,7 @@ async def handler(request: Request):
 
     with open(LOGFILE, 'a') as log_file:
         log_file.write(f"Received data: {data}\n")
-        subprocess.run("git pull", shell=True, cwd=HOME, stdout=log_file, stderr=log_file)
+        subprocess.run("git pull", shell=True, cwd=HOME / 'arson.dev', stdout=log_file, stderr=log_file)
 
     changed_files = []
 
