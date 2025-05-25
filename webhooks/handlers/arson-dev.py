@@ -18,8 +18,8 @@ def execute_command(command: str, cwd: Path, log_file: io.TextIOWrapper, executi
 
     return status
 
-def redeploy_service_factory(steps: list[str], log_file_path: Path = LOG_DIR, execution_queue: list[str]):
-    def redeploy_service(name: str, log_file_name: str):
+def redeploy_service_factory(steps: list[str], log_file_path: Path = LOG_DIR):
+    def redeploy_service(name: str, log_file_name: str, execution_queue: list[str]):
         for i, step in enumerate(steps, 1):
             with open(log_file_path / log_file_name, 'a') as log_file:
                 log_file.write(f'Step {i} for {name}: {step.format(name=name)}\n')
