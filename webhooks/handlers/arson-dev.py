@@ -2,14 +2,15 @@ from fastapi import Request
 import subprocess
 import os
 from pathlib import Path
+import datetime
 
 HOME = Path.home()
-LOGFILE = HOME / 'logs' / 'arson-dev.log'
+LOG_DIR = HOME / 'logs' / 'arson-dev'
 
-def redeploy_service_factory(steps: list[str], log_file_path: Path = LOGFILE):
-    def redeploy_service(name: str):
+def redeploy_service_factory(steps: list[str], log_file_path: Path = LOG_DIR):
+    def redeploy_service(name: str, log_file_name: str):
         for i, step in enumerate(steps, 1):
-            with open(log_file_path, 'a') as log_file:
+            with open(log_file_path / log_file_name, 'a') as log_file:
                 log_file.write(f'Step {i} for {name}: {step}\n')
 
                 status = subprocess.run(step.format(name=name), shell=True, cwd=HOME / 'arson.dev' / name, stdout=log_file, stderr=log_file).returncode
@@ -32,8 +33,13 @@ SERVICES = {
 
 async def handler(request: Request):
     data = await request.json()
+    now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-    with open(LOGFILE, 'a') as log_file:
+    os.makedirs(LOG_DIR, exist_ok=True)
+
+    logfile = f'redeploy-{now}.log'
+
+    with open(LOG_DIR / logfile, 'a') as log_file:
         log_file.write(f"Received data: {data}\n")
         subprocess.run("git pull", shell=True, cwd=HOME / 'arson.dev', stdout=log_file, stderr=log_file)
 
@@ -46,7 +52,7 @@ async def handler(request: Request):
     for file in changed_files:
         root, _ = os.path.split(file)
         if root in SERVICES:
-            SERVICES[root](root)
+            SERVICES[root](root, logfile)
 
     return 200
 
