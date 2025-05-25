@@ -33,7 +33,7 @@ def redeploy_service_factory(steps: list[str], log_file_path: Path = LOG_DIR, ex
 
 
 redeploy_sveltekit = redeploy_service_factory(['npm i', 'npm run build', 'pm2 restart {name}'])
-redeploy_fastapi = redeploy_service_factory(['source ../.venv/bin/activate', 'pip install -r requirements.txt', 'systemctl --user restart {name}'])
+redeploy_fastapi = redeploy_service_factory(['../.venv/bin/python -m pip install -r requirements.txt', 'systemctl --user restart {name}'])
 
 SERVICES = {
     'archive': redeploy_sveltekit,
