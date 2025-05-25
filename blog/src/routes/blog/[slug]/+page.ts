@@ -16,14 +16,20 @@ export const load: PageLoad = async ({ fetch, params }) => {
     const { title, content } = post;
     const resp = await fetch(`${MD_API_URL}/convert`, {
       method: 'POST',
-      body: content,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ markdown: content }),
     })
 
     const html = await resp.text()
 
     const headingsData = await fetch(`${MD_API_URL}/headings`, {
       method: 'POST',
-      body: content,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ markdown: content }),
     });
 
     const headings = await headingsData.json();

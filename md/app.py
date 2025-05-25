@@ -71,7 +71,6 @@ async def root():
             'description': 'Validation error'
         }
     },
-    
 )
 async def convert(markdown: MarkdownObject):
     html = markdown.markdown
@@ -103,7 +102,7 @@ async def convert(markdown: MarkdownObject):
     return HTMLResponse(content=html, media_type='text/html')
 
 @app.post(
-    '/headers',
+    '/headings',
     summary='Extract Headings from Markdown',
     description='Extracts headings from Markdown text and returns them as a list of dictionaries with level, text, and href.',
     response_model=list[HeadingObject],
