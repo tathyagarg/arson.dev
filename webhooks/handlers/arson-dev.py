@@ -13,7 +13,6 @@ def log_event(event: str, log_file: Path , execution_queue: list[str]):
         log.write(f"[{len(execution_queue)}] - {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {event}\n")
 
 def execute_command(command: str, cwd: Path, log_file: io.TextIOWrapper, execution_queue: list[str]) -> int:
-    execution_queue.append(command)
     log_event(f"Executing command: {command} in {cwd}", Path(log_file.name), execution_queue)
     status = subprocess.run(command, shell=True, cwd=cwd, stdout=log_file, stderr=log_file).returncode
 
@@ -25,9 +24,14 @@ def redeploy_service_factory(steps: list[str], log_file_path: Path = LOG_DIR, ex
             with open(log_file_path / log_file_name, 'a') as log_file:
                 log_file.write(f'Step {i} for {name}: {step.format(name=name)}\n')
 
-                status = execute_command(step.format(name=name), HOME / 'arson.dev' / name, log_file, execution_queue)
+                command = step.format(name=name)
+
+                execution_queue.append(command)
+                status = execute_command(command, HOME / 'arson.dev' / name, log_file, execution_queue)
 
                 log_file.write(f'Step {i} for {name} completed with status {status}\n')
+
+        return execution_queue
 
     return redeploy_service
 
@@ -55,6 +59,8 @@ async def handler(request: Request):
 
     with open(LOG_DIR / logfile, 'a') as log:
         log_event(f"Received request with data: {data}", LOG_DIR / logfile, execution_queue)
+
+        execution_queue.append('git pull')
         execute_command('git pull', HOME / 'arson.dev', log, execution_queue)
 
     changed_files = []
@@ -71,7 +77,7 @@ async def handler(request: Request):
 
         if root in SERVICES:
             log_event("Redeploying service: {root}", LOG_DIR / logfile, execution_queue)
-            SERVICES[root](root, logfile)
+            execution_queue = SERVICES[root](root, logfile)
 
     log_event(f"Redeployment process completed, commands run: {execution_queue}", LOG_DIR / logfile, execution_queue)
 
