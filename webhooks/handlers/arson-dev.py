@@ -18,7 +18,7 @@ def execute_command(command: str, cwd: Path, log_file: io.TextIOWrapper, executi
 
     return status
 
-def redeploy_service_factory(steps: list[str], log_file_path: Path = LOG_DIR, execution_queue: list[str] = []):
+def redeploy_service_factory(steps: list[str], log_file_path: Path = LOG_DIR, execution_queue: list[str]):
     def redeploy_service(name: str, log_file_name: str):
         for i, step in enumerate(steps, 1):
             with open(log_file_path / log_file_name, 'a') as log_file:
@@ -77,7 +77,7 @@ async def handler(request: Request):
 
         if root in SERVICES:
             log_event("Redeploying service: {root}", LOG_DIR / logfile, execution_queue)
-            execution_queue = SERVICES[root](root, logfile)
+            execution_queue = SERVICES[root](root, logfile, execution_queue)
 
     log_event(f"Redeployment process completed, commands run: {execution_queue}", LOG_DIR / logfile, execution_queue)
 
