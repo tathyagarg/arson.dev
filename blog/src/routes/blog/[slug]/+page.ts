@@ -21,14 +21,14 @@ export const load: PageLoad = async ({ fetch, params }) => {
 
     const html = await resp.text()
 
-    const headers = await fetch(`${MD_API_URL}/headers`, {
+    const headingsData = await fetch(`${MD_API_URL}/headings`, {
       method: 'POST',
       body: content,
     });
 
-    const headersText = await headers.json();
+    const headings = await headingsData.json();
 
-    return { html, headers: headersText, title };
+    return { html, headings, title };
   }
 
   throw error(404, 'Post not found');
