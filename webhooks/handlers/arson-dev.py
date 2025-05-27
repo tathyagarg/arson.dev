@@ -1,43 +1,16 @@
 from fastapi import Request
-import subprocess
 import os
 from pathlib import Path
-import io
 import datetime
+from . import HOME, log_event, execute_command
+from . import redeploy_fastapi as fastapi_factory
+from . import redeploy_sveltekit as sveltekit_factory
 
-HOME = Path.home()
 LOG_DIR = HOME / 'logs' / 'arson-dev'
 
-def log_event(event: str, log_file: Path , execution_queue: list[str]):
-    with open(log_file, 'a') as log:
-        log.write(f"[{len(execution_queue)}] - {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {event}\n")
+redeploy_sveltekit = sveltekit_factory(LOG_DIR)
+redeploy_fastapi = fastapi_factory(LOG_DIR)
 
-def execute_command(command: str, cwd: Path, log_file: io.TextIOWrapper, execution_queue: list[str]) -> int:
-    log_event(f"Executing command: {command} in {cwd}", Path(log_file.name), execution_queue)
-    status = subprocess.run(command, shell=True, cwd=cwd, stdout=log_file, stderr=log_file).returncode
-
-    return status
-
-def redeploy_service_factory(steps: list[str], log_file_path: Path = LOG_DIR):
-    def redeploy_service(name: str, log_file_name: str, execution_queue: list[str]):
-        for i, step in enumerate(steps, 1):
-            with open(log_file_path / log_file_name, 'a') as log_file:
-                log_file.write(f'Step {i} for {name}: {step.format(name=name)}\n')
-
-                command = step.format(name=name)
-
-                execution_queue.append(command)
-                status = execute_command(command, HOME / 'arson.dev' / name, log_file, execution_queue)
-
-                log_file.write(f'Step {i} for {name} completed with status {status}\n')
-
-        return execution_queue
-
-    return redeploy_service
-
-
-redeploy_sveltekit = redeploy_service_factory(['npm i', 'npm run build', 'pm2 restart {name}'])
-redeploy_fastapi = redeploy_service_factory(['../.venv/bin/python -m pip install -r requirements.txt', 'systemctl --user restart {name}'])
 
 SERVICES = {
     'archive': redeploy_sveltekit,

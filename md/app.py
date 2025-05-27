@@ -48,7 +48,7 @@ def make_codeblock(match) -> str:
     return f'<pre class="language-{lang} line-numbers" data-start="{startline}" data-filename="{filename}" style="padding-top: {"2.5em"*(filename != '')}"><code>{content}</code></pre>'
 
 
-@app.get('/')
+@app.get('/status')
 async def root():
     return {'message': 'Markdown to HTML converter', 'doc': 'Docs at /docs'}
 

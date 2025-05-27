@@ -24,7 +24,7 @@ async def lifespan(_: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-@app.get('/')
+@app.get('/status')
 async def root():
     return {"message": "Hello, World!"}
 
@@ -41,11 +41,6 @@ async def create_webhook(listener_data: ListenerModel, passphrase: Annotated[str
         return {"error": "Invalid passphrase"}, 401
 
     try:
-        os.makedirs('handlers', exist_ok=True)
-
-        with open(f'handlers/{listener_data.name}.py', 'w') as f:
-            f.write(listener_data.handler)
-
         listener = Listener.create(
             name=listener_data.name,
             verification_type=listener_data.verification_type,
