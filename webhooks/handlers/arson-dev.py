@@ -50,7 +50,7 @@ async def handler(request: Request):
 
         if root in SERVICES:
             log_event("Redeploying service: {root}", LOG_DIR / logfile, execution_queue)
-            execution_queue = SERVICES[root](root, logfile, execution_queue)
+            execution_queue = SERVICES[root](root, logfile, 'arson.dev', execution_queue)
 
     log_event(f"Redeployment process completed, commands run: {execution_queue}", LOG_DIR / logfile, execution_queue)
 

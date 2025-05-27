@@ -19,7 +19,7 @@ def execute_command(command: str, cwd: Path, log_file: io.TextIOWrapper, executi
 
 def redeploy_service_factory(steps: list[str]):
     def _factory(log_file_path: Path):
-        def redeploy_service(name: str, log_file_name: str, execution_queue: list[str]):
+        def redeploy_service(name: str, log_file_name: str, parent_dir: str, execution_queue: list[str]):
             for i, step in enumerate(steps, 1):
                 with open(log_file_path / log_file_name, 'a') as log_file:
                     log_file.write(f'Step {i} for {name}: {step.format(name=name)}\n')
@@ -27,7 +27,7 @@ def redeploy_service_factory(steps: list[str]):
                     command = step.format(name=name)
 
                     execution_queue.append(command)
-                    status = execute_command(command, HOME / 'arson.dev' / name, log_file, execution_queue)
+                    status = execute_command(command, HOME / parent_dir / name, log_file, execution_queue)
 
                     log_file.write(f'Step {i} for {name} completed with status {status}\n')
 

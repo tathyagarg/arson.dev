@@ -23,7 +23,7 @@ async def handler(request: Request):
         execution_queue.append('git pull')
         execute_command('git pull', HOME / 'dwmun25', log, execution_queue)
 
-    redeploy_sveltekit(LOG_DIR)('dwmun', logfile, execution_queue)
+    redeploy_sveltekit(LOG_DIR)('dwmun', logfile, 'dwmun', execution_queue)
 
     log_event(f"Redeployment process completed, commands run: {execution_queue}", LOG_DIR / logfile, execution_queue)
 
