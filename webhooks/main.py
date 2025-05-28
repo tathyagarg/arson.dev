@@ -37,7 +37,9 @@ async def get_webhooks():
 
 @app.post('/webhooks')
 async def create_webhook(listener_data: ListenerModel, passphrase: Annotated[str, Body(...)]):
-    if ph.verify(PASSPHRASE, passphrase) is False:
+    try:
+        ph.verify(PASSPHRASE, passphrase)
+    except argon2.exceptions.VerifyMismatchError:
         return {"error": "Invalid passphrase"}, 401
 
     try:

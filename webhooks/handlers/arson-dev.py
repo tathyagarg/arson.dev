@@ -17,6 +17,7 @@ SERVICES = {
     'blog': redeploy_sveltekit,
     'md': redeploy_fastapi,
     'webhooks': redeploy_fastapi,
+    'cdn': redeploy_fastapi,
 }
 
 
