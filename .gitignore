@@ -3,7 +3,6 @@ __pycache__/
 *.db
 .env
 loki-data
-auth
 
 .DS_Store
 node_modules
