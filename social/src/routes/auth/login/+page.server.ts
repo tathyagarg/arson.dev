@@ -81,6 +81,9 @@ export const actions: Actions = {
 			const session = await auth.createSession(sessionToken, userId);
 			auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
 		} catch (e) {
+      if (e instanceof Error && e.message.includes('unique constraint')) {
+        return fail(400, { message: 'Username already exists' });
+      }
 			return fail(500, { message: 'An error has occurred' });
 		}
 		return redirect(302, '/auth');
