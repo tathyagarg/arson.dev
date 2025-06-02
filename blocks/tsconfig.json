@@ -1,7 +1,10 @@
 {
   "extends": "@tsconfig/ember",
   "glint": {
-    "environment": ["ember-loose", "ember-template-imports"]
+    "environment": [
+      "ember-loose",
+      "ember-template-imports"
+    ]
   },
   "compilerOptions": {
     // The combination of `baseUrl` with `paths` allows Ember's classic package
@@ -9,9 +12,18 @@
     // work with TypeScript.
     "baseUrl": ".",
     "paths": {
-      "blocks/tests/*": ["tests/*"],
-      "blocks/*": ["app/*"],
-      "*": ["types/*"]
+      "app/*": [
+        "app/*"
+      ],
+      "blocks/tests/*": [
+        "tests/*"
+      ],
+      "blocks/*": [
+        "app/*"
+      ],
+      "*": [
+        "types/*"
+      ]
     },
     "types": [
       "ember-source/types",
@@ -28,5 +40,9 @@
       "@ember-data/tracking/unstable-preview-types",
       "@warp-drive/core-types/unstable-preview-types"
     ]
-  }
+  },
+  "include": [
+    "app/**/*",
+    "types/**/*"
+  ]
 }

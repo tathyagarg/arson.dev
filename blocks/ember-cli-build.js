@@ -1,6 +1,7 @@
 'use strict';
 
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
+const path = require('path');
 
 module.exports = function (defaults) {
   const app = new EmberApp(defaults, {
@@ -14,7 +15,7 @@ module.exports = function (defaults) {
       },
     },
     'ember-cli-babel': { enableTypeScriptTransform: true },
-
+    babel: { sourceMaps: 'inline' },
     // Add options here
   });
 
@@ -31,6 +32,7 @@ module.exports = function (defaults) {
     ],
     packagerOptions: {
       webpackConfig: {
+        devtool: 'source-map',
         module: {
           rules: [
             {
@@ -38,6 +40,11 @@ module.exports = function (defaults) {
               use: ['postcss-loader']
             }
           ]
+        },
+        resolve: {
+          alias: {
+            '@constants': path.resolve(__dirname, 'app/constants'),
+          }
         }
       }
     }
