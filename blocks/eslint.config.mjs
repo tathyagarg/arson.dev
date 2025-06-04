@@ -77,7 +77,10 @@ export default ts.config(
   {
     files: ['**/*.{js,gjs}'],
     languageOptions: {
-      parserOptions: parserOptions.esm.js,
+      parserOptions: {
+        ...parserOptions.esm.js,
+        project: './tsconfig.json',
+      },
       globals: {
         ...globals.browser,
       },

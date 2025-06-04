@@ -5,33 +5,7 @@ export default interface Block {
   color: string;
 }
 
-export const BlockDirectory: Record<string, Block[]> = {
-  'default': [
-    {
-      name: 'Text',
-      description: 'A simple text block',
-      icon: 'text',
-      color: 'blue'
-    },
-    {
-      name: 'Image',
-      description: 'An image block',
-      icon: 'image',
-      color: 'green'
-    }
-  ],
-  'advanced': [
-    {
-      name: 'Video',
-      description: 'A video block',
-      icon: 'video',
-      color: 'red'
-    },
-    {
-      name: 'Audio',
-      description: 'An audio block',
-      icon: 'audio',
-      color: 'purple'
-    }
-  ]
-}
+export type BlockCategory = {
+  color: string;
+  blocks: Block[];
+};
