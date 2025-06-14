@@ -2,7 +2,9 @@
 import { config } from '../lib/config.ts';
 const { key, service } = Astro.props;
 
-const recentPings: { status: number, responseTime: number, createdAt: Date }[] = await fetch(`http://localhost:4321/api/recent/${key}`)
+const host = import.meta.env.PROD ? 'https://uptime.arson.dev' : 'http://localhost:4321';
+
+const recentPings: { status: number, responseTime: number, createdAt: Date }[] = await fetch(`${host}/api/recent/${key}`)
   .then((res) => res.json())
 
 const average: number = recentPings.reduce((acc, ping) => acc + ping.responseTime, 0) / recentPings.length;
