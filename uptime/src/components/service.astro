@@ -52,7 +52,7 @@ const average: number = recentPings.reduce((acc, ping) => acc + ping.responseTim
 
 </script>
 
-<h1 class="text-xl">{service.name}</h1>
+<a class="text-(--text) text-xl hover:underline" href={service.url}>{service.name}</a>
 <div class="bg-(--base) p-4 rounded-lg shadow-lg flex flex-row gap-1 min-h-20" id="ping-holder">
   {recentPings.map((ping) => (
     <span

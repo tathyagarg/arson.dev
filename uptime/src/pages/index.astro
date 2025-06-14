@@ -8,6 +8,14 @@ import { config } from '../lib/config.ts';
 import type { Service } from '../lib/config.ts';
 
 const services: Record<string, Service> = config.services;
+
+function convertCase(text: string): string {
+  return text
+    .replace(/([a-z])([A-Z])/g, '$1 $2') // Add space between lowercase and uppercase letters
+    .replace(/([A-Z])([A-Z][a-z])/g, '$1 $2') // Add space between uppercase letters followed by lowercase letters
+    .toLowerCase() // Convert to lowercase
+    .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize the first letter of each word
+}
 ---
 
 <Layout>
@@ -18,5 +26,13 @@ const services: Record<string, Service> = config.services;
         <ServiceComponent key={key} service={service} />
       ))}
     </div>
+  </div>
+  <div class="w-full bg-(--blue) flex flex-row justify-center items-center gap-4">
+    {Object.entries(config.footer).map(([key, value]) => (
+      <div class="flex gap-2 items-center justify-center">
+        <span class="text-(--base)">{convertCase(key)}</span>
+        <span class="text-(--base)" set:html={value}></span>
+      </div>
+    ))}
   </div>
 </Layout>
