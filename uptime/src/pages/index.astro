@@ -1,0 +1,20 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ServiceComponent from '../components/service.astro';
+
+import { config } from '../lib/config.ts';
+import type { Service } from '../lib/config.ts';
+
+const services: Record<string, Service> = config.services;
+---
+
+<Layout>
+  <div class="w-[50%] h-full mx-auto flex flex-col gap-4">
+    <h1 class="text-center text-5xl font-bold">Tathya's Awesome Services</h1>
+    <div class="bg-(--mantle) p-4 rounded-lg shadow-lg">
+      {Object.entries(services).map(([key, service]) => (
+        <ServiceComponent key={key} service={service} />
+      ))}
+    </div>
+  </div>
+</Layout>

@@ -1,0 +1,65 @@
+---
+import { config } from '../lib/config.ts';
+const { key, service } = Astro.props;
+
+const recentPings: { status: number, responseTime: number, createdAt: Date }[] = await fetch(`http://localhost:4321/api/recent/${key}`)
+  .then((res) => res.json())
+
+const average: number = recentPings.reduce((acc, ping) => acc + ping.responseTime, 0) / recentPings.length;
+---
+
+<script>
+  const information = 'information';
+  const pings = document.querySelectorAll('.ping');
+
+  pings.forEach((ping) => {
+    const pingStatus = ping.getAttribute('x-ping-status');
+    const pingResponse = ping.getAttribute('x-ping-response');
+    const pingCreatedAt = new Date(ping.getAttribute('x-ping-created-at') ?? 0);
+    
+    ping.addEventListener('mouseover', () => {
+      const informationElement = document.getElementById(information);
+
+      if (!informationElement) {
+        console.error('Information element not found');
+        return;
+      }
+
+      informationElement.classList.remove('hidden');
+      informationElement.classList.add('flex');
+
+      informationElement.innerHTML = `
+        <p>Status: ${pingStatus} <small>(${pingResponse}ms)</small></p>
+        <p>Created At: ${pingCreatedAt.toLocaleString()}</p>
+      `;
+    });
+
+    ping.addEventListener('mouseleave', () => {
+      const informationElement = document.getElementById(information);
+
+      if (!informationElement) {
+        console.error('Information element not found');
+        return;
+      }
+
+      informationElement.classList.add('hidden');
+      informationElement.classList.remove('flex');
+    });
+  });
+
+</script>
+
+<h1 class="text-xl">{service.name}</h1>
+<div class="bg-(--base) p-4 rounded-lg shadow-lg flex flex-row gap-1 min-h-20" id="ping-holder">
+  {recentPings.map((ping) => (
+    <span
+      class=`ping min-h-full w-full ${ping.status >= 200 && ping.status < 300 ? (ping.responseTime > average * config.degradedMultiplier ? 'bg-(--yellow)' : 'bg-(--green)' ) : 'bg-(--red)'}`
+      x-ping-status=`${ping.status}`
+      x-ping-response=`${ping.responseTime}`
+      x-ping-created-at=`${ping.createdAt}`
+      ></span>
+  ))}
+</div>
+<div id="information" class="hidden flex-row justify-between text-(--subtext0) my-1">
+</div>
+
