@@ -1,4 +1,4 @@
-import { db, eq, services, pings } from 'astro:db';
+import { db, eq, services, pings, asc, desc } from 'astro:db';
 
 export const prerender = false;
 
@@ -13,9 +13,9 @@ export async function GET({ params }) {
     status: pings.status,
     responseTime: pings.responseTime,
     createdAt: pings.createdAt,
-  }).from(pings).where(eq(pings.service, service ?? "")).orderBy(pings.createdAt).limit(50).run();
+  }).from(pings).where(eq(pings.service, service ?? "")).orderBy(desc(pings.createdAt)).limit(50).run();
 
   console.log(`Fetched ${servicePingData.rows.length} ping records for service: ${service}`);
 
-  return new Response(JSON.stringify(servicePingData.rows), { status: 200, headers: { 'Content-Type': 'application/json' } });
+  return new Response(JSON.stringify(servicePingData.rows.reverse()), { status: 200, headers: { 'Content-Type': 'application/json' } });
 }
