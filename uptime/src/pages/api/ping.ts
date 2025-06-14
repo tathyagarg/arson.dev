@@ -53,6 +53,8 @@ export async function GET(context: APIContext) {
     }
     const responseTime = Date.now() - start;
 
+    console.log(`Service ${service.slug} responded with status ${status} in ${responseTime}ms`);
+
     await db.insert(pings).values({
       service: service.slug,
       responseTime,
