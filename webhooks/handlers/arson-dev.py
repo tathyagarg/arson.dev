@@ -5,12 +5,13 @@ import datetime
 from . import HOME, log_event, execute_command
 from . import redeploy_fastapi as fastapi_factory
 from . import redeploy_sveltekit as sveltekit_factory
+from . import redeploy_astro as astro_factory
 
 LOG_DIR = HOME / 'logs' / 'arson-dev'
 
 redeploy_sveltekit = sveltekit_factory(LOG_DIR)
 redeploy_fastapi = fastapi_factory(LOG_DIR)
-
+redeploy_astro = astro_factory(LOG_DIR)
 
 SERVICES = {
     'archive': redeploy_sveltekit,
@@ -18,6 +19,7 @@ SERVICES = {
     'md': redeploy_fastapi,
     'webhooks': redeploy_fastapi,
     'cdn': redeploy_fastapi,
+    'uptime': redeploy_astro,
 }
 
 
