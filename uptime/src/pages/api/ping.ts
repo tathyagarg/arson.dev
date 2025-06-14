@@ -33,9 +33,15 @@ export async function GET(context: APIContext) {
     return new Response('Unauthorized', { status: 401 });
   }
 
+  let statuses = []
+
   const servicesList = await fetchServices();
 
+  console.log(`Pinging ${servicesList.length} services...`);
+
   for (const service of servicesList) {
+    console.log(`Pinging service: ${service.slug} (${service.url})`);
+
     let start = Date.now();
     let status;
 
@@ -53,7 +59,9 @@ export async function GET(context: APIContext) {
       status,
       createdAt: new Date(),
     })
+
+    statuses.push(status);
   }
 
-  return new Response(JSON.stringify(servicesList), { status: 200 });
+  return new Response(JSON.stringify({ statuses }), { status: 200 });
 }
