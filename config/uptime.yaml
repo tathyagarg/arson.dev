@@ -11,6 +11,7 @@ footer:
       alt="WTFPL"/>
     </a>
 
+hardDegradedLimit: 1000
 degradedMultiplier: 2
 uptimeCheckInterval: 30
 servicesCacheTTL: 60

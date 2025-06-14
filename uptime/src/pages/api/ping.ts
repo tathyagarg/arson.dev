@@ -1,5 +1,8 @@
 import { db, services, pings } from 'astro:db';
 import { config } from '../../lib/config.ts';
+import type { APIContext } from 'astro';
+
+export const prerender = false;
 
 type ServiceData = {
   slug: string;
@@ -24,7 +27,12 @@ async function fetchServices() {
   return allServices;
 }
 
-export async function GET() {
+export async function GET(context: APIContext) {
+  console.log(context.request.headers)
+  if (context.request.headers.get('Authorization') !== import.meta.env.SERVICE_PING_SECRET) {
+    return new Response('Unauthorized', { status: 401 });
+  }
+
   const servicesList = await fetchServices();
 
   for (const service of servicesList) {
@@ -43,6 +51,7 @@ export async function GET() {
       service: service.slug,
       responseTime,
       status,
+      createdAt: new Date(),
     })
   }
 

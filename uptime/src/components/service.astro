@@ -30,7 +30,7 @@ const average: number = recentPings.reduce((acc, ping) => acc + ping.responseTim
 
       informationElement.innerHTML = `
         <p>Status: ${pingStatus} <small>(${pingResponse}ms)</small></p>
-        <p>Created At: ${pingCreatedAt.toLocaleString()}</p>
+        <p>Created At: ${pingCreatedAt.toLocaleString("en-GB", { timeZone: "IST" })}</p>
       `;
     });
 
@@ -53,7 +53,8 @@ const average: number = recentPings.reduce((acc, ping) => acc + ping.responseTim
 <div class="bg-(--base) p-4 rounded-lg shadow-lg flex flex-row gap-1 min-h-20" id="ping-holder">
   {recentPings.map((ping) => (
     <span
-      class=`ping min-h-full w-full ${ping.status >= 200 && ping.status < 300 ? (ping.responseTime > average * config.degradedMultiplier ? 'bg-(--yellow)' : 'bg-(--green)' ) : 'bg-(--red)'}`
+      class=`ping min-h-full w-full
+        ${ping.status >= 200 && ping.status < 300 ? (ping.responseTime > average * config.degradedMultiplier || ping.responseTime > config.hardDegradedLimit ? 'bg-(--yellow)' : 'bg-(--green)' ) : 'bg-(--red)'}`
       x-ping-status=`${ping.status}`
       x-ping-response=`${ping.responseTime}`
       x-ping-created-at=`${ping.createdAt}`
