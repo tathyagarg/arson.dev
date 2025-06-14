@@ -3,7 +3,6 @@ import { config } from '../lib/config.ts';
 const { key, service } = Astro.props;
 
 const host = import.meta.env.PROD ? 'https://uptime.arson.dev' : 'http://localhost:4321';
-// const host = 'http://localhost:4321'; // Use the local server for development
 
 const recentPings: { status: number, responseTime: number, createdAt: Date }[] = await fetch(`${host}/api/recent/${key}`)
   .then((res) => res.json())
