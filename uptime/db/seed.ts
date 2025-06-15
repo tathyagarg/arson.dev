@@ -1,22 +1,14 @@
-import { db, eq, services } from 'astro:db';
+import { services } from './schema.ts';
+import { db } from './client.ts';
 import { config } from '../src/lib/config.ts';
 
-export default async function seed() {
-  for (const [name, _service] of Object.entries(config.services)) {
-    let service = _service as { name: string; url: string };
+for (const [name, _service] of Object.entries(config.services) as [string, { name: string; url: string }][]) {
+  console.log(`Seeding service: ${name} (${_service.name}) at ${_service.url}`);
+  const service = {
+    slug: name,
+    name: _service.name,
+    url: _service.url,
+  };
 
-    const existingService = await db.select().from(services).where(eq(services.name, service.name));
-
-    if (existingService.length === 0) {
-      console.log(`Seeding service: ${service.name} (${service.url})`);
-
-      await db.insert(services).values({
-        slug: name,
-        name: service.name,
-        url: service.url,
-      });
-    } else {
-      console.log(`Service already exists: ${service.name} (${service.url})`);
-    }
-  }
+  await db.insert(services).values(service).onConflictDoNothing();
 }

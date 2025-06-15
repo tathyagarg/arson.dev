@@ -9,16 +9,20 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/db": "^0.15.0",
     "@astrojs/node": "^9.2.2",
     "@tailwindcss/vite": "^4.1.10",
     "astro": "^5.9.3",
+    "drizzle-kit": "^0.31.1",
+    "drizzle-orm": "^0.44.2",
+    "jose": "^6.0.11",
+    "pg": "^8.16.0",
     "tailwindcss": "^4.1.10",
     "yaml": "^2.8.0"
   },
   "devDependencies": {
     "dotenv-cli": "^8.0.0",
     "ts-node": "^10.9.2",
+    "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   }
 }

@@ -1,4 +1,5 @@
-import { db, services, pings } from 'astro:db';
+import { db } from '../../../db/client.ts';
+import { services, pings } from '../../../db/schema.ts';
 import { config } from '../../lib/config.ts';
 import type { APIContext } from 'astro';
 
