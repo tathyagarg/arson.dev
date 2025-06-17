@@ -4,22 +4,21 @@ from pathlib import Path
 import datetime
 from . import HOME, log_event, execute_command
 from . import redeploy_fastapi as fastapi_factory
-from . import redeploy_sveltekit as sveltekit_factory
-from . import redeploy_astro as astro_factory
+from . import redeploy_pm2 as pm2_factory
 
 LOG_DIR = HOME / 'logs' / 'arson-dev'
 
-redeploy_sveltekit = sveltekit_factory(LOG_DIR)
-redeploy_fastapi = fastapi_factory(LOG_DIR)
-redeploy_astro = astro_factory(LOG_DIR)
+fastapi = fastapi_factory(LOG_DIR)
+pm2 = pm2_factory(LOG_DIR)
 
 SERVICES = {
-    'archive': redeploy_sveltekit,
-    'blog': redeploy_sveltekit,
-    'md': redeploy_fastapi,
-    'webhooks': redeploy_fastapi,
-    'cdn': redeploy_fastapi,
-    'uptime': redeploy_astro,
+    'archive': pm2,
+    'blog': pm2,
+    'md': fastapi,
+    'webhooks': fastapi,
+    'cdn': fastapi,
+    'uptime': pm2,
+    'blocks': pm2,
 }
 
 
