@@ -3,7 +3,7 @@ from fastapi import Request
 from datetime import datetime
 import os
 
-from . import HOME, log_event, execute_command, redeploy_sveltekit
+from . import HOME, log_event, execute_command, redeploy_pm2
 
 LOG_DIR = HOME / 'logs' / 'dwmun'
 
@@ -23,7 +23,7 @@ async def handler(request: Request):
         execution_queue.append('git pull')
         execute_command('git pull', HOME / 'dwmun25', log, execution_queue)
 
-    redeploy_sveltekit(LOG_DIR)('dwmun25', logfile, '', execution_queue)
+    redeploy_pm2(LOG_DIR)('dwmun25', logfile, '', execution_queue)
 
     log_event(f"Redeployment process completed, commands run: {execution_queue}", LOG_DIR / logfile, execution_queue)
 
