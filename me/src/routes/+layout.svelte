@@ -37,6 +37,18 @@
 <svelte:head>
   <link rel="icon" href={favicon} />
   <title>Tathya's Awesome Website</title>
+
+  <meta property="og:title" content="Tathya's porfolio" />
+  <meta
+    property="og:description"
+    content="Tathya's personal website and portfolio"
+  />
+  <meta name="description" content="Tathya's personal website and portfolio" />
+  <meta property="og:site_name" content="arson.dev" />
+  <meta property="og:url" content="https://arson.dev" />
+  <meta property="og:image" content="/screenshots/home.png" />
+
+  <meta charset="UTF-8" />
 </svelte:head>
 
 <div
