@@ -34,7 +34,11 @@
   });
 </script>
 
-<svelte:head><link rel="icon" href={favicon} /></svelte:head>
+<svelte:head>
+  <link rel="icon" href={favicon} />
+  <title>Tathya's Awesome Website</title>
+</svelte:head>
+
 <div
   class="min-h-[100vh] h-full w-full flex items-center justify-center text-center flex-col"
 >
