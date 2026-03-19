@@ -8,11 +8,14 @@
 </div>
 
 <div class="pt-8 w-full text-left">
-  <i class="text-sm w-full text-left"
-    >(The images loading slowly is not intentional, my server is just extremely
-    slow.)</i
-  >
-  <div class="grid grid-cols-1 gap-4">
+  <div class="grid grid-cols-1 gap-4 h-[40vh] overflow-scroll">
+    <Card
+      title="Harbor Browser"
+      content="A web browser built completely from scratch in Rust and Zig"
+      bannerUrl="/screenshots/harbor.png"
+      link="https://harbor.arson.dev/"
+    />
+
     <Card
       title="DWMUN'25"
       content="A website for my school's Model United Nations conference."
