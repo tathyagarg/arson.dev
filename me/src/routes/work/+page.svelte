@@ -8,7 +8,7 @@
 </div>
 
 <div class="pt-8 w-full text-left">
-  <div class="grid grid-cols-1 gap-4 h-[40vh] overflow-scroll">
+  <div class="grid grid-cols-1 gap-4">
     <Card
       title="Harbor Browser"
       content="A web browser built completely from scratch in Rust and Zig"
