@@ -5,6 +5,10 @@
   const PAGE_ID = "H";
 </script>
 
+<svelte:head>
+  <title>Home | Arson.dev</title>
+</svelte:head>
+
 <div class="flex justify-end gap-8">
   <a href="https://github.com/tathyagarg">GitHub</a>
   <a href="https://www.instagram.com/tathyagarg/">Instagram</a>

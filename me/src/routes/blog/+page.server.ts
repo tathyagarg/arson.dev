@@ -4,8 +4,13 @@ import type { PageServerLoad } from "./$types";
 
 export const prerender = false;
 
-export const load: PageServerLoad = async ({ locals }) => {
-  console.log("Loading posts for user:", locals.user);
+const ERROR_MAP: Record<string, string> = {
+  "403": "Error 403: You do not have permission to view this page",
+}
+
+export const load: PageServerLoad = async ({ locals, url }) => {
+  let error = ERROR_MAP[url.searchParams.get("err") || ""] || null;
+
   const role = locals.user?.role || "user";
 
   let includeUnpublished = hasPerm(role as Role, "unpublished::view");
@@ -24,5 +29,6 @@ export const load: PageServerLoad = async ({ locals }) => {
   return {
     posts,
     role,
+    error,
   }
 }

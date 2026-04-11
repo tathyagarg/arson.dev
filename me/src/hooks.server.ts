@@ -2,7 +2,6 @@ import { prisma } from '$lib/server/prisma';
 import type { Handle } from '@sveltejs/kit';
 
 export const handle: Handle = async ({ event, resolve }) => {
-  console.log("YOOYOYO");
   const sessionId = event.cookies.get("sessionId");
 
   if (sessionId) {

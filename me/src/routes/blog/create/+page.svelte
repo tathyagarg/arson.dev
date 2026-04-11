@@ -5,6 +5,10 @@
   let { form } = $props();
 </script>
 
+<svelte:head>
+  <title>Create Post | Arson.dev</title>
+</svelte:head>
+
 <form method="POST">
   <div>
     <label for="title" class="block mb-2"> Title: </label>

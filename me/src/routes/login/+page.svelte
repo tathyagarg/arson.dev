@@ -6,6 +6,10 @@
   let { form } = $props();
 </script>
 
+<svelte:head>
+  <title>Login | Arson.dev</title>
+</svelte:head>
+
 <form method="POST">
   <div>
     <label for="username">Name:</label>

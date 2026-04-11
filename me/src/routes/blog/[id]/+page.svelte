@@ -7,6 +7,10 @@
   const role = () => data.role ?? "user";
 </script>
 
+<svelte:head>
+  <title>{post().title} | Blog | Arson.dev</title>
+</svelte:head>
+
 <div class="relative h-full w-full">
   <h1 class="text-2xl font-bold mb-4">
     {post().title}
