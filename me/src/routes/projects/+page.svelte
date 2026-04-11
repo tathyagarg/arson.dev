@@ -64,8 +64,8 @@
 <h1 class="text-2xl font-bold mb-4">Projects</h1>
 
 <p class="mb-4">
-  These are my projects. I'm ashamed of pretty much all of them. If someone
-  asked 'who made this?' on any of these, I'd hesitate before answering.
+  These are my projects. I hate pretty much all of them. If I could, I'd wipe
+  them all, wipe my GitHub, and start over. But I can't bring myself to do that.
 </p>
 
 <div class="w-full grid grid-cols-2 gap-4">
