@@ -81,6 +81,8 @@
   </div>
   <p class="mb-4">
     Published At: {new Date(post().publishedAt!).toLocaleString()}
+    &sdot;
+    {post().views} views
   </p>
   <div id="blog">
     {@html post().content}

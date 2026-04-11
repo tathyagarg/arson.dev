@@ -45,4 +45,6 @@ model Post {
   publishedAt DateTime?
 
   revisions Int @default(0)
+
+  views Int @default(0)
 }

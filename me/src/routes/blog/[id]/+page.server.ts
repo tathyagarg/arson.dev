@@ -105,7 +105,18 @@ export const load: PageServerLoad = async ({ params, locals }) => {
     }
   }
 
+  await prisma.post.update({
+    where: {
+      // @ts-expect-error
+      id: parseInt(params.id),
+    },
+    data: {
+      views: data.views + 1,
+    },
+  });
+
   data.content = await marked.parse(data.content);
+  data.views += 1;
 
   return {
     post: data,
