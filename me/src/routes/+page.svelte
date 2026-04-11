@@ -12,8 +12,8 @@
 
 <p>I need to write more</p>
 <blockquote>
-  <p>inspirational quote</p>
-  <p>goes here</p>
+  <p>nothing is ever</p>
+  <p>good enough</p>
 </blockquote>
 
 <Footer pid={PAGE_ID} rev={REVISION} />

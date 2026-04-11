@@ -8,3 +8,4 @@ loki-data
 node_modules
 .svelte-kit
 build
+.vercel

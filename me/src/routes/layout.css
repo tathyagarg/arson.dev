@@ -14,6 +14,16 @@
   --color-accent-info: #a8a8ff;
 
   --font-mono: 'SF Mono', 'SF Mono Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  
+  --shadow-button:
+      inset -1px -1px 0 0 var(--color-text-head),
+      inset 1px 1px 0 0 var(--color-background-prim),
+      0 10px 20px -15px var(--color-text-sub);
+
+  --shadow-button-click:
+      inset 1px 1px 0 0 var(--color-text-head),
+      inset -1px -1px 0 0 var(--color-background-prim),
+      0 5px 10px -15px var(--color-text-sub);
 }
 
 html {
