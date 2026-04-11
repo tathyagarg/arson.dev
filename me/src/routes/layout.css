@@ -60,24 +60,10 @@ html {
     width: 100%;
     height: 100%;
     background-color: var(--color-background-prim);
-    opacity: 0.95;
+    opacity: 0.9;
     pointer-events: none;
   
     z-index: -1;
-
-    animation: opacity-pulse 10s ease-in-out infinite;
-  }
-}
-
-@keyframes opacity-pulse {
-  0% {
-    opacity: 0.95;
-  }
-  50% {
-    opacity: 0.9;
-  }
-  100% {
-    opacity: 0.95;
   }
 }
 
