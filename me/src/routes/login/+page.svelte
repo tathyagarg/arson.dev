@@ -30,6 +30,7 @@
   {/if}
 
   <div class="mt-2">
+    <button type="submit">Submit</button>
     <button
       data-variant="err"
       type="submit"
@@ -42,7 +43,6 @@
     >
       Logout
     </button>
-    <button type="submit">Submit</button>
   </div>
 </form>
 

@@ -16,7 +16,22 @@ export const load: PageServerLoad = async ({ locals }) => {
 }
 
 export const actions = {
-  default: async ({ request }) => {
+  default: async ({ locals, request }) => {
+    const user = locals.user;
+    if (!user) {
+      return {
+        status: 403,
+        error: new Error("You must be logged in to create a post"),
+      }
+    }
+
+    if (!hasPerm(user.role, "post::create")) {
+      return {
+        status: 403,
+        error: new Error("You do not have permission to create a post"),
+      }
+    }
+
     const data = await request.formData();
 
     const title = data.get("title");
@@ -29,6 +44,8 @@ export const actions = {
         content: content as string,
         published,
         publishedAt: published ? new Date() : null,
+
+        authorId: user.uuid,
       }
     });
 
