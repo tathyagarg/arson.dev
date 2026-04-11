@@ -59,19 +59,29 @@
 />
 
 <style>
+  #blog {
+    text-align-last: start;
+  }
+
   #blog :global(h1) {
     font-size: 1.75rem;
     font-weight: bold;
+
+    margin-bottom: 1rem;
   }
 
   #blog :global(h2) {
     font-size: 1.5rem;
     font-weight: bold;
+
+    margin-bottom: 1rem;
   }
 
   #blog :global(h3) {
     font-size: 1.25rem;
     font-weight: bold;
+
+    margin-bottom: 1rem;
   }
 
   #blog :global(p) {
