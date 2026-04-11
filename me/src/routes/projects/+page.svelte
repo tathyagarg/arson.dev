@@ -34,6 +34,14 @@
       github: "https://github.com/tathyagarg/3-body-problem",
     },
     {
+      name: "Postperson",
+      description:
+        "A simple TUI application for sending HTTP requests, written in Python with Textual",
+      img: "/assets/projects/postperson.png",
+      link: null,
+      github: "https://github.com/tathyagarg/postperson",
+    },
+    {
       name: "DWMUN'25",
       description: "A website for the DWMUN'25 conference",
       img: "/assets/projects/dwmun.png",
@@ -66,6 +74,7 @@
 <p class="mb-4">
   These are my projects. I hate pretty much all of them. If I could, I'd wipe
   them all, wipe my GitHub, and start over. But I can't bring myself to do that.
+  Projects are arranged from least ashamed of to most ashamed of.
 </p>
 
 <div class="w-full grid grid-cols-2 gap-4">
