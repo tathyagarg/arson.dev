@@ -64,6 +64,8 @@
   }
 
   #blog :global(h1) {
+    color: var(--color-accent-info);
+
     font-size: 1.75rem;
     font-weight: bold;
 
@@ -71,6 +73,8 @@
   }
 
   #blog :global(h2) {
+    color: var(--color-accent-succ);
+
     font-size: 1.5rem;
     font-weight: bold;
 
@@ -78,6 +82,8 @@
   }
 
   #blog :global(h3) {
+    color: var(--color-accent-err);
+
     font-size: 1.25rem;
     font-weight: bold;
 
@@ -94,8 +100,8 @@
   }
 
   #blog :global(img) {
-    max-width: 100%;
-    height: auto;
+    width: 75%;
+    margin: 1rem auto;
   }
 
   #blog :global(ul) {
