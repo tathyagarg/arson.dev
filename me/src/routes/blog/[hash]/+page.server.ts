@@ -1,7 +1,8 @@
 import { prisma } from "$lib/server/prisma"
-import bcrypt from "bcryptjs";
 import type { PageServerLoad } from "../$types";
 import { hasPerm, type Role } from "$lib/perms";
+
+export const prerender = false;
 
 export const load: PageServerLoad = async ({ params, locals }) => {
   let role = locals.user?.role || "user";
