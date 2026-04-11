@@ -23,7 +23,7 @@
       <a href="/login">login</a>
     </nav>
 
-    <div class="fixed bottom-[8px] left-[8px] text-sm opacity-50">
+    <div class="md:absolute bottom-[8px] left-[8px] text-sm opacity-50">
       <a
         href="https://github.com/tathyagarg/arson.dev/commit/{data.commitSha}"
         target="_blank"
@@ -38,7 +38,7 @@
     </div>
   </div>
   <div
-    class="text-justify h-full max-h-[95vh] md:overflow-scroll mb-8 md:mb-0"
+    class="relative md:static text-justify h-full md:max-h-[95vh] md:overflow-scroll mb-8 md:mb-0"
     style="text-align-last: end;"
   >
     {@render children()}

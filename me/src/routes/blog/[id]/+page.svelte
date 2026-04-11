@@ -12,7 +12,9 @@
 </svelte:head>
 
 <div class="relative h-full w-full">
-  <div class="flex items-center justify-between">
+  <div
+    class="flex flex-col md:flex-row md:items-center md:justify-between my-4 md:my-0"
+  >
     <div class="flex gap-4">
       {#if hasPerm(role(), "post::edit")}
         <button
