@@ -39,6 +39,38 @@
           </button>
         </form>
       {/if}
+
+      {#if hasPerm(role(), "unpublished::publish") && !post().published}
+        <form
+          method="POST"
+          action="?/publish"
+          onsubmit={(e) => {
+            if (!confirm("Are you sure you want to publish this post?")) {
+              e.preventDefault();
+            }
+          }}
+        >
+          <button data-variant="succ" class="cursor-pointer">
+            Publish Post
+          </button>
+        </form>
+      {/if}
+
+      {#if hasPerm(role(), "post::unpublish") && post().published}
+        <form
+          method="POST"
+          action="?/unpublish"
+          onsubmit={(e) => {
+            if (!confirm("Are you sure you want to unpublish this post?")) {
+              e.preventDefault();
+            }
+          }}
+        >
+          <button data-variant="err" class="cursor-pointer">
+            Unpublish Post
+          </button>
+        </form>
+      {/if}
     </div>
 
     <h1 class="text-4xl font-bold mb-4">

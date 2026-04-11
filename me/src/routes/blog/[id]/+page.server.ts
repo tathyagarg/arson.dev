@@ -24,7 +24,54 @@ export const actions = {
     });
 
     return redirect(303, "/blog");
+  },
+
+  publish: async ({ params, locals }) => {
+    let role = locals.user?.role || "user";
+    if (!hasPerm(role as Role, "unpublished::publish")) {
+      return {
+        status: 403,
+        error: new Error("You do not have permission to publish this post"),
+      }
+    }
+
+    await prisma.post.update({
+      where: {
+        // @ts-expect-error
+        id: parseInt(params.id),
+      },
+      data: {
+        published: true,
+        publishedAt: new Date(),
+      },
+    });
+
+    return redirect(303, "/blog");
+  },
+
+  unpublish: async ({ params, locals }) => {
+    let role = locals.user?.role || "user";
+    if (!hasPerm(role as Role, "post::unpublish")) {
+      return {
+        status: 403,
+        error: new Error("You do not have permission to unpublish this post"),
+      }
+    }
+
+    await prisma.post.update({
+      where: {
+        // @ts-expect-error
+        id: parseInt(params.id),
+      },
+      data: {
+        published: false,
+        publishedAt: null,
+      },
+    });
+
+    return redirect(303, "/blog");
   }
+
 } satisfies Actions;
 
 export const load: PageServerLoad = async ({ params, locals }) => {

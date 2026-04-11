@@ -6,7 +6,7 @@ export type PermMap = {
 };
 
 const PERM_MAP: PermMap = {
-  "admin": ["post::create", "post::delete", "post::edit", "post::view",
+  "admin": ["post::create", "post::delete", "post::edit", "post::view", "post::unpublish",
     "unpublished::view", "unpublished::edit", "unpublished::delete", "unpublished::publish"],
   "user": ["post::view"],
 }
