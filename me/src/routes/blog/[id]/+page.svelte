@@ -12,19 +12,25 @@
 </svelte:head>
 
 <div class="relative h-full w-full">
-  <h1 class="text-2xl font-bold mb-4">
+  <h1 class="text-4xl font-bold mb-4">
     {post().title}
   </h1>
   <p class="mb-4">
     Published At: {new Date(post().publishedAt!).toLocaleString()}
   </p>
-  <p>{post().content}</p>
+  <div id="blog">
+    {@html post().content}
+  </div>
 
   <div class="absolute bottom-4 right-4 flex gap-2">
     {#if hasPerm(role(), "post::edit")}
-      <form method="POST" action="?/edit">
-        <button data-variant="info"> Edit Post </button>
-      </form>
+      <button
+        data-variant="info"
+        class="cursor-pointer"
+        onclick={() => (window.location.href = `/blog/${post().id}/edit`)}
+      >
+        Edit Post
+      </button>
     {/if}
 
     {#if hasPerm(role(), "post::delete")}
@@ -37,7 +43,7 @@
           }
         }}
       >
-        <button data-variant="err"> Delete Post </button>
+        <button data-variant="err" class="cursor-pointer"> Delete Post </button>
       </form>
     {/if}
   </div>
@@ -47,3 +53,34 @@
   pid="P{String(post().id).padStart(2, '0')}"
   rev="R{String(post().revisions).padStart(2, '0')}"
 />
+
+<style>
+  #blog :global(h1) {
+    font-size: 1.75rem;
+    font-weight: bold;
+  }
+
+  #blog :global(h2) {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  #blog :global(h3) {
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+
+  #blog :global(p) {
+    margin-bottom: 1rem;
+  }
+
+  #blog :global(a) {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+
+  #blog :global(img) {
+    max-width: 100%;
+    height: auto;
+  }
+</style>

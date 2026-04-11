@@ -2,6 +2,7 @@ import { prisma } from "$lib/server/prisma"
 import type { PageServerLoad } from "../$types";
 import { hasPerm, type Role } from "$lib/perms";
 import { redirect, type Actions } from "@sveltejs/kit";
+import { marked } from "marked";
 
 export const prerender = false;
 
@@ -56,6 +57,8 @@ export const load: PageServerLoad = async ({ params, locals }) => {
       error: new Error("You do not have permission to view this post"),
     }
   }
+
+  data.content = await marked.parse(data.content);
 
   return {
     post: data,
