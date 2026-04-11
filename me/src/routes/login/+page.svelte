@@ -10,7 +10,7 @@
   <title>Login | Arson.dev</title>
 </svelte:head>
 
-<form method="POST">
+<form method="POST" action="?/login">
   <div>
     <label for="username">Name:</label>
     <input id="username" name="username" type="text" />
@@ -29,7 +29,21 @@
     </Error>
   {/if}
 
-  <button class="mt-2" type="submit">Submit</button>
+  <div class="mt-2">
+    <button
+      data-variant="err"
+      type="submit"
+      formaction="?/logout"
+      onclick={(e) => {
+        if (!confirm("Are you sure you want to logout?")) {
+          e.preventDefault();
+        }
+      }}
+    >
+      Logout
+    </button>
+    <button type="submit">Submit</button>
+  </div>
 </form>
 
 <Footer pid="L" rev="00" />

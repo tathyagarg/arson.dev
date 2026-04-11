@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 export const prerender = false;
 
 export const actions = {
-  default: async ({ cookies, request }) => {
+  login: async ({ cookies, request }) => {
     const data = await request.formData();
 
     const username = data.get("username");
@@ -17,7 +17,6 @@ export const actions = {
       return { success: false, error: "Invalid form data" };
     }
 
-    // @ts-expect-error
     const user = await prisma.user.findUnique({ where: { username } });
     if (!user) {
       return { success: false, error: "Invalid username or password" };
@@ -28,7 +27,6 @@ export const actions = {
       return { success: false, error: "Invalid username or password" };
     }
 
-    // @ts-expect-error
     const session = await prisma.session.create({
       data: {
         userId: user.uuid,
@@ -44,6 +42,11 @@ export const actions = {
       maxAge: 7 * 24 * 60 * 60, // 7 days
     });
 
+    return { success: true };
+  },
+
+  logout: async ({ cookies }) => {
+    cookies.delete("sessionId", { path: "/" });
     return { success: true };
   }
 } satisfies Actions;
