@@ -9,7 +9,7 @@
   <link rel="icon" href={favicon} />
 </svelte:head>
 
-<div class="w-full h-full min-h-[95vh] grid grid-cols-2">
+<div class="w-full h-full md:min-h-[95vh] md:grid md:grid-cols-2">
   <div>
     <a href="/">
       <h1 class="text-2xl">tathya garg</h1>
@@ -23,7 +23,7 @@
       <a href="/login">login</a>
     </nav>
 
-    <div class="absolute bottom-[8px] left-[8px] text-sm opacity-50">
+    <div class="fixed bottom-[8px] left-[8px] text-sm opacity-50">
       <a
         href="https://github.com/tathyagarg/arson.dev/commit/{data.commitSha}"
         target="_blank"
@@ -37,7 +37,10 @@
       </em>
     </div>
   </div>
-  <div class="text-justify h-full" style="text-align-last: end;">
+  <div
+    class="text-justify h-full max-h-[95vh] md:overflow-scroll mb-8 md:mb-0"
+    style="text-align-last: end;"
+  >
     {@render children()}
   </div>
 </div>
