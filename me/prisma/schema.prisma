@@ -20,6 +20,7 @@ model User {
   role String @default("user")
 
   sessions Session[]
+  posts    Post[]
 }
 
 model Session {
@@ -36,6 +37,9 @@ model Session {
 
 model Post {
   id Int @id @default(autoincrement())
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [uuid], onDelete: Cascade)
 
   title     String
   content   String

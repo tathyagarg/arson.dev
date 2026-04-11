@@ -20,7 +20,10 @@ export const load: PageServerLoad = async ({ locals, url }) => {
       createdAt: "desc",
     },
     // @ts-expect-error
-    include: { content: false },
+    include: {
+      content: false,
+      author: true,
+    },
     where: {
       published: includeUnpublished ? undefined : true,
     },

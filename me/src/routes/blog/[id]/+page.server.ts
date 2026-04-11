@@ -82,6 +82,10 @@ export const load: PageServerLoad = async ({ params, locals }) => {
       // @ts-expect-error
       id: parseInt(params.id),
     },
+    // @ts-expect-error
+    include: {
+      author: true,
+    },
   });
 
   if (!data) {

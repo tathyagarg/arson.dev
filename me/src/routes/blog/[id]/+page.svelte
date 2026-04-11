@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Byline from "$lib/components/Byline.svelte";
   import Footer from "$lib/components/Footer.svelte";
   import { hasPerm } from "$lib/perms";
 
@@ -84,6 +85,7 @@
     &sdot;
     {post().views} views
   </p>
+  <Byline username={post().author?.username ?? "Unknown"} />
   <div id="blog">
     {@html post().content}
   </div>
