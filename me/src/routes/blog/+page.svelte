@@ -9,21 +9,19 @@
 </script>
 
 {#each data.posts as post}
-  {#if post.published || hasPerm(data.role, "unpublished::view")}
-    <a href="/blog/{post.hash}" class="no-underline!">
-      <div class="mb-4 p-4" class:bg-accent-err={!post.published}>
-        <h2 class="text-xl font-bold mb-2">{post.title}</h2>
-        <!-- timestamp publishedAt -->
-        {#if !post.published}
-          <p class="text-sm text-mb-2">Unpublished</p>
-        {:else}
-          <p class="text-sm text-text-sub mb-2">
-            Published at: {new Date(post.publishedAt!).toLocaleString()}
-          </p>
-        {/if}
-      </div>
-    </a>
-  {/if}
+  <a href="/blog/{post.hash}" class="no-underline!">
+    <div class="mb-4 p-4" class:bg-accent-err={!post.published}>
+      <h2 class="text-xl font-bold mb-2">{post.title}</h2>
+      <!-- timestamp publishedAt -->
+      {#if !post.published}
+        <p class="text-sm text-mb-2">Unpublished</p>
+      {:else}
+        <p class="text-sm text-text-sub mb-2">
+          Published at: {new Date(post.publishedAt!).toLocaleString()}
+        </p>
+      {/if}
+    </div>
+  </a>
 {/each}
 
 {#if hasPerm(data.role, "post::create")}

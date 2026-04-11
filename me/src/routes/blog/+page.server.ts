@@ -1,3 +1,4 @@
+import { hasPerm, type Role } from "$lib/perms";
 import { prisma } from "$lib/server/prisma"
 import type { Cookies } from "@sveltejs/kit";
 import bcrypt from "bcryptjs";
@@ -31,11 +32,16 @@ export const load = async ({ cookies }: { cookies: Cookies }) => {
     role = user.role;
   }
 
+  let includeUnpublished = hasPerm(role as Role, "unpublished::view");
+
   const posts = await prisma.post.findMany({
     orderBy: {
       createdAt: "desc",
     },
-    include: { content: false }
+    include: { content: false },
+    where: {
+      published: includeUnpublished ? undefined : true,
+    },
   });
 
   return {
