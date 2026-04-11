@@ -47,12 +47,26 @@
       link: "https://archive.arson.dev/sites/techfusion/",
       github: null,
     },
+    {
+      name: "Pink Legal Club Evora",
+      description: "A website for my local Pink Legal Club",
+      img: "/assets/projects/plc-evora.png",
+      link: "https://pinklegalclubevora.com/",
+      github: "https://github.com/tathyagarg/evora",
+    },
   ];
 </script>
 
 <svelte:head>
   <title>Projects | Arson.dev</title>
 </svelte:head>
+
+<h1 class="text-2xl font-bold mb-4">Projects</h1>
+
+<p class="mb-4">
+  These are my projects. I'm ashamed of pretty much all of them. If someone
+  asked 'who made this?' on any of these, I'd hesitate before answering.
+</p>
 
 <div class="w-full grid grid-cols-2 gap-4">
   {#each projects as project}
