@@ -3,32 +3,8 @@ import bcrypt from "bcryptjs";
 import type { PageServerLoad } from "../$types";
 import { hasPerm, type Role } from "$lib/perms";
 
-export const load: PageServerLoad = async ({ params, cookies }) => {
-  // get user data
-  let role = "user";
-
-  if (cookies.get("arsonist__pass")) {
-    let username = cookies.get("arsonist__username");
-    let pass = cookies.get("arsonist__pass") ?? "";
-
-    const user = await prisma.user.findFirst({
-      where: {
-        username: username,
-      },
-    });
-
-    if (!user) {
-      return;
-    }
-
-    const isValid = await bcrypt.compare(pass, user.password);
-
-    if (!isValid) {
-      return;
-    }
-
-    role = user.role;
-  }
+export const load: PageServerLoad = async ({ params, locals }) => {
+  let role = locals.user?.role || "user";
 
   let data = await prisma.post.findUnique({
     where: {

@@ -1,13 +1,22 @@
 // See https://svelte.dev/docs/kit/types#app.d.ts
+
+import type { Role } from "$lib/perms";
+
 // for information about these interfaces
 declare global {
-	namespace App {
-		// interface Error {}
-		// interface Locals {}
-		// interface PageData {}
-		// interface PageState {}
-		// interface Platform {}
-	}
+  namespace App {
+    // interface Error {}
+    interface Locals {
+      user: {
+        uuid: string;
+        username: string;
+        role: Role;
+      } | null;
+    }
+    // interface PageData {}
+    // interface PageState {}
+    // interface Platform {}
+  }
 }
 
-export {};
+export { };

@@ -12,10 +12,26 @@ datasource db {
 }
 
 model User {
-  username String @id
+  uuid String @id @default(uuid())
+
+  username String @unique
   password String
 
   role String @default("user")
+
+  sessions Session[]
+}
+
+model Session {
+  id     String @id @default(uuid())
+  userId String
+
+  user User @relation(fields: [userId], references: [uuid], onDelete: Cascade)
+
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
 }
 
 model Post {
