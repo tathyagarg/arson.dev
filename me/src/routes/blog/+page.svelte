@@ -27,7 +27,7 @@
       {:else}
         <p class="text-sm text-text-sub mb-2">
           Published {new Date(post.publishedAt!).toLocaleString()}
-          &sdot; P{String(post.id).padStart(2, "0")}R{String(
+          &sdot; P{String(post.id).padStart(3, "0")}R{String(
             post.revisions,
           ).padStart(2, "0")}
         </p>

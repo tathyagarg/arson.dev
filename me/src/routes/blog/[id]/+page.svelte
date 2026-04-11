@@ -54,7 +54,7 @@
 </div>
 
 <Footer
-  pid="P{String(post().id).padStart(2, '0')}"
+  pid="P{String(post().id).padStart(3, '0')}"
   rev="R{String(post().revisions).padStart(2, '0')}"
 />
 
