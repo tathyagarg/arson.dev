@@ -1,6 +1,8 @@
 import { prisma } from "$lib/server/prisma";
 import type { PageServerLoad } from "./$types";
 
+export const prerender = false;
+
 export const load: PageServerLoad = async ({ params }) => {
   const username = params.username;
 
