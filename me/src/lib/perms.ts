@@ -1,4 +1,4 @@
-export type Role = "admin";
+export type Role = "admin" | "user";
 export type Perm = `${string}::${string}`;
 
 export type PermMap = {
@@ -8,6 +8,7 @@ export type PermMap = {
 const PERM_MAP: PermMap = {
   "admin": ["post::create", "post::delete", "post::edit", "post::view",
     "unpublished::view", "unpublished::edit", "unpublished::delete", "unpublished::publish"],
+  "user": ["post::view"],
 }
 
 export function hasPerm(role: Role, perm: Perm): boolean {
