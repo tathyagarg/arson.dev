@@ -9,7 +9,7 @@
   <link rel="icon" href={favicon} />
 </svelte:head>
 
-<div class="w-full h-full grid grid-cols-2">
+<div class="w-full h-full min-h-[95vh] grid grid-cols-2">
   <div>
     <a href="/">
       <h1 class="text-2xl">tathya garg</h1>
@@ -20,6 +20,7 @@
     <nav class="mt-4 flex gap-8">
       <a href="/blog">blog</a>
       <a href="/projects">projects</a>
+      <a href="/login">login</a>
     </nav>
 
     <div class="absolute bottom-[8px] left-[8px] text-sm opacity-50">
@@ -36,7 +37,7 @@
       </em>
     </div>
   </div>
-  <div class="text-justify" style="text-align-last: end;">
+  <div class="text-justify h-full" style="text-align-last: end;">
     {@render children()}
   </div>
 </div>

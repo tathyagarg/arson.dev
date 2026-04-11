@@ -14,6 +14,7 @@ export const load: PageServerLoad = async ({ locals }) => {
     orderBy: {
       createdAt: "desc",
     },
+    // @ts-expect-error
     include: { content: false },
     where: {
       published: includeUnpublished ? undefined : true,

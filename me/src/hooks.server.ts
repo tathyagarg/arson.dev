@@ -6,6 +6,7 @@ export const handle: Handle = async ({ event, resolve }) => {
   const sessionId = event.cookies.get("sessionId");
 
   if (sessionId) {
+    // @ts-expect-error
     const session = await prisma.session.findUnique({
       where: { id: sessionId },
       include: { user: true }

@@ -35,7 +35,7 @@ model Session {
 }
 
 model Post {
-  hash String @id @default(cuid())
+  id Int @id @default(autoincrement())
 
   title     String
   content   String
@@ -43,4 +43,6 @@ model Post {
 
   createdAt   DateTime  @default(now())
   publishedAt DateTime?
+
+  revisions Int @default(0)
 }

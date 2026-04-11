@@ -4,20 +4,20 @@
   import type { Post } from "@prisma/client";
 
   let { data }: { data: { role: Role; posts: Post[] } } = $props();
-
-  console.log(JSON.stringify(data));
 </script>
 
 {#each data.posts as post}
-  <a href="/blog/{post.hash}" class="no-underline!">
+  <a href="/blog/{post.id}" class="no-underline!">
     <div class="mb-4 p-4" class:bg-accent-err={!post.published}>
       <h2 class="text-xl font-bold mb-2">{post.title}</h2>
-      <!-- timestamp publishedAt -->
       {#if !post.published}
-        <p class="text-sm text-mb-2">Unpublished</p>
+        <p class="text-sm text-mb-2 text-text-prim">Unpublished</p>
       {:else}
         <p class="text-sm text-text-sub mb-2">
-          Published at: {new Date(post.publishedAt!).toLocaleString()}
+          Published {new Date(post.publishedAt!).toLocaleString()}
+          &sdot; P{String(post.id).padStart(2, "0")}R{String(
+            post.revisions,
+          ).padStart(2, "0")}
         </p>
       {/if}
     </div>
@@ -26,11 +26,11 @@
 
 {#if hasPerm(data.role, "post::create")}
   <button
-    class="
-    bg-accent-info p-4 text-background-prim shadow-button active:shadow-button-click
-    "
+    data-variant="info"
+    class="cursor-pointer"
+    onclick={() => (window.location.href = "/blog/create")}
   >
-    Create Post
+    Create New Post
   </button>
 {/if}
 

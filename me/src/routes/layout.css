@@ -16,9 +16,9 @@
   --font-mono: 'SF Mono', 'SF Mono Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
   
   --shadow-button:
-      inset -1px -1px 0 0 var(--color-text-head),
-      inset 1px 1px 0 0 var(--color-background-prim),
-      0 10px 20px -15px var(--color-text-sub);
+      inset -2px -2px 0 0 rgba(from var(--color-text-head) r g b / 50%),
+      inset 2px 2px 0 0 rgba(from var(--color-background-prim) r g b / 50%),
+      0px 0px 40px -10px var(--color-text-sub);
 
   --shadow-button-click:
       inset 1px 1px 0 0 var(--color-text-head),
@@ -93,4 +93,63 @@ blockquote {
   padding-right: 16px;
   margin-right: 0;
   color: var(--color-text-sub);
+}
+
+button {
+  background-color: var(--color-accent-info);
+
+  &[data-variant="succ"] {
+    background-color: var(--color-accent-succ);
+  }
+
+  &[data-variant="err"] {
+    background-color: var(--color-accent-err);
+  }
+
+  color: var(--color-background-prim);
+
+  padding: calc(var(--spacing) * 4);
+  box-shadow: var(--shadow-button);
+
+  &:active {
+    box-shadow: var(--shadow-button-click);
+  }
+}
+
+input {
+  background-color: var(--color-text-prim);
+  color: var(--color-background-prim);
+  border: none;
+
+  padding: calc(var(--spacing) * 2);
+  margin: calc(var(--spacing) * 2) 0;
+
+  text-align: start;
+  text-align-last: start;
+
+  box-shadow: var(--shadow-button);
+
+  &:focus {
+    outline: none;
+    box-shadow: var(--shadow-button-click);
+  }
+}
+
+textarea {
+  background-color: var(--color-text-prim);
+  color: var(--color-background-prim);
+  border: none;
+
+  padding: calc(var(--spacing) * 2);
+  margin: calc(var(--spacing) * 2) 0;
+
+  text-align: start;
+  text-align-last: start;
+
+  box-shadow: var(--shadow-button);
+
+  &:focus {
+    outline: none;
+    box-shadow: var(--shadow-button-click);
+  }
 }

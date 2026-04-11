@@ -17,6 +17,7 @@ export const actions = {
       return { success: false, error: "Invalid form data" };
     }
 
+    // @ts-expect-error
     const user = await prisma.user.findUnique({ where: { username } });
     if (!user) {
       return { success: false, error: "Invalid username or password" };
@@ -27,6 +28,7 @@ export const actions = {
       return { success: false, error: "Invalid username or password" };
     }
 
+    // @ts-expect-error
     const session = await prisma.session.create({
       data: {
         userId: user.uuid,
