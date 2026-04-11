@@ -12,40 +12,44 @@
 </svelte:head>
 
 <div class="relative h-full w-full">
-  <h1 class="text-4xl font-bold mb-4">
-    {post().title}
-  </h1>
+  <div class="flex items-center justify-between">
+    <div class="flex gap-4">
+      {#if hasPerm(role(), "post::edit")}
+        <button
+          data-variant="info"
+          class="cursor-pointer"
+          onclick={() => (window.location.href = `/blog/${post().id}/edit`)}
+        >
+          Edit Post
+        </button>
+      {/if}
+
+      {#if hasPerm(role(), "post::delete")}
+        <form
+          method="POST"
+          action="?/delete"
+          onsubmit={(e) => {
+            if (!confirm("Are you sure you want to delete this post?")) {
+              e.preventDefault();
+            }
+          }}
+        >
+          <button data-variant="err" class="cursor-pointer">
+            Delete Post
+          </button>
+        </form>
+      {/if}
+    </div>
+
+    <h1 class="text-4xl font-bold mb-4">
+      {post().title}
+    </h1>
+  </div>
   <p class="mb-4">
     Published At: {new Date(post().publishedAt!).toLocaleString()}
   </p>
   <div id="blog">
     {@html post().content}
-  </div>
-
-  <div class="absolute bottom-4 right-4 flex gap-2">
-    {#if hasPerm(role(), "post::edit")}
-      <button
-        data-variant="info"
-        class="cursor-pointer"
-        onclick={() => (window.location.href = `/blog/${post().id}/edit`)}
-      >
-        Edit Post
-      </button>
-    {/if}
-
-    {#if hasPerm(role(), "post::delete")}
-      <form
-        method="POST"
-        action="?/delete"
-        onsubmit={(e) => {
-          if (!confirm("Are you sure you want to delete this post?")) {
-            e.preventDefault();
-          }
-        }}
-      >
-        <button data-variant="err" class="cursor-pointer"> Delete Post </button>
-      </form>
-    {/if}
   </div>
 </div>
 
@@ -82,5 +86,33 @@
   #blog :global(img) {
     max-width: 100%;
     height: auto;
+  }
+
+  #blog :global(ul) {
+    list-style-type: disc;
+    padding-left: 1rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  #blog :global(ol) {
+    list-style-type: decimal;
+    padding-left: 1rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  #blog :global(li) {
+    margin-bottom: 0.5rem;
+  }
+
+  #blog :global(pre) {
+    background-color: var(--color-background-tri);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    margin-bottom: 1rem;
+
+    text-align-last: start;
   }
 </style>

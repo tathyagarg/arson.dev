@@ -22,7 +22,7 @@
       description:
         "A primitive 'game engine' written in Odin as an exercise to learn the language",
       img: "/assets/projects/odingine.png",
-      link: "https://github.com/tathyagarg/odingine",
+      link: null,
       github: "https://github.com/tathyagarg/odingine",
     },
     {
@@ -30,7 +30,7 @@
       description:
         "A simple simulation of the 3-body problem, written in Zig with Raylib for rendering",
       img: "/assets/projects/3bp.png",
-      linnk: null,
+      link: null,
       github: "https://github.com/tathyagarg/3-body-problem",
     },
     {
@@ -49,6 +49,10 @@
     },
   ];
 </script>
+
+<svelte:head>
+  <title>Projects | Arson.dev</title>
+</svelte:head>
 
 <div class="w-full grid grid-cols-2 gap-4">
   {#each projects as project}
