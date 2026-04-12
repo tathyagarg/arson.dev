@@ -11,8 +11,6 @@ export const actions = {
     const username = data.get("username");
     const password = data.get("password");
 
-    console.log("Received login attempt:", { username, password });
-
     if (typeof username !== "string" || typeof password !== "string") {
       return { success: false, error: "Invalid form data" };
     }

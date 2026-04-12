@@ -1,6 +1,6 @@
 import { prisma } from "$lib/server/prisma"
 import type { PageServerLoad } from "../$types";
-import { hasPerm, type Role } from "$lib/perms";
+import { hasPerm, PostDelete, PostUnpublish, PostView, UnpublishedPublish, UnpublishedView, type Role } from "$lib/perms";
 import { redirect, type Actions } from "@sveltejs/kit";
 import { marked } from "marked";
 
@@ -9,7 +9,7 @@ export const prerender = false;
 export const actions = {
   delete: async ({ params, locals }) => {
     let role = locals.user?.role || "user";
-    if (!hasPerm(role as Role, "post::delete")) {
+    if (!hasPerm(role as Role, PostDelete)) {
       return {
         status: 403,
         error: new Error("You do not have permission to delete this post"),
@@ -28,7 +28,7 @@ export const actions = {
 
   publish: async ({ params, locals }) => {
     let role = locals.user?.role || "user";
-    if (!hasPerm(role as Role, "unpublished::publish")) {
+    if (!hasPerm(role as Role, UnpublishedPublish)) {
       return {
         status: 403,
         error: new Error("You do not have permission to publish this post"),
@@ -51,7 +51,7 @@ export const actions = {
 
   unpublish: async ({ params, locals }) => {
     let role = locals.user?.role || "user";
-    if (!hasPerm(role as Role, "post::unpublish")) {
+    if (!hasPerm(role as Role, PostUnpublish)) {
       return {
         status: 403,
         error: new Error("You do not have permission to unpublish this post"),
@@ -70,21 +70,55 @@ export const actions = {
     });
 
     return redirect(303, "/blog");
-  }
+  },
 
+  comment: async ({ params, request, locals }) => {
+    let role = locals.user?.role || "user";
+    if (!hasPerm(role as Role, PostView)) {
+      return {
+        status: 403,
+        error: new Error("You do not have permission to comment on this post"),
+      }
+    }
+
+    let formData = await request.formData();
+    let content = formData.get("content") as string;
+
+    if (!content) {
+      return {
+        status: 400,
+        error: new Error("Content is required"),
+      }
+    }
+
+    await prisma.comment.create({
+      data: {
+        content,
+        authorId: locals.user?.uuid!,
+        postId: parseInt(params.id!),
+      },
+    });
+
+    return redirect(303, `/blog/${params.id}?commented=true`);
+  },
 } satisfies Actions;
 
 export const load: PageServerLoad = async ({ params, locals }) => {
-  let role = locals.user?.role || "user";
+  let user = locals.user;
+  let role = user?.role || "user";
 
   let data = await prisma.post.findUnique({
     where: {
       // @ts-expect-error
       id: parseInt(params.id),
     },
-    // @ts-expect-error
     include: {
       author: true,
+      comments: {
+        include: {
+          author: true,
+        }
+      }
     },
   });
 
@@ -95,14 +129,14 @@ export const load: PageServerLoad = async ({ params, locals }) => {
     }
   }
 
-  if (!data.published && !hasPerm(role as Role, "unpublished::view")) {
+  if (!data.published && !hasPerm(role as Role, UnpublishedView)) {
     return {
       status: 403,
       error: new Error("You do not have permission to view this post"),
     }
   }
 
-  if (!hasPerm(role as Role, "post::view")) {
+  if (!hasPerm(role as Role, PostView)) {
     return {
       status: 403,
       error: new Error("You do not have permission to view this post"),
@@ -124,6 +158,6 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 
   return {
     post: data,
-    role,
+    user,
   }
 }

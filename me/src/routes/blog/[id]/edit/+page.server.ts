@@ -1,4 +1,4 @@
-import { hasPerm } from "$lib/perms";
+import { hasPerm, PostEdit, UnpublishedEdit } from "$lib/perms";
 import { prisma } from "$lib/server/prisma";
 import { redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "../$types";
@@ -10,13 +10,12 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 
   let post = await prisma.post.findUnique({
     where: {
-      // @ts-expect-error
       id: parseInt(params.id),
     },
   });
 
   let published = post?.published || false;
-  if ((published && !hasPerm(role, "post::edit")) || (!published && !hasPerm(role, "unpublished::edit"))) {
+  if ((published && !hasPerm(role, PostEdit)) || (!published && !hasPerm(role, UnpublishedEdit))) {
     return redirect(308, "/blog?err=403");
   }
 
@@ -50,7 +49,6 @@ export const actions = {
         content: content as string,
         published,
         publishedAt: published ? new Date() : null,
-        // @ts-expect-error
         revisions: post ? post.revisions + 1 : 0,
       }
     });

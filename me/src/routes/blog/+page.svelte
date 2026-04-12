@@ -2,7 +2,7 @@
   import Error from "$lib/components/Error.svelte";
   import Footer from "$lib/components/Footer.svelte";
   import PostComp from "$lib/components/Post.svelte";
-  import { hasPerm, type Role } from "$lib/perms";
+  import { hasPerm, PostCreate, type Role } from "$lib/perms";
   import type { Post } from "@prisma/client";
 
   let { data }: { data: { role: Role; posts: Post[]; error: string | null } } =
@@ -19,7 +19,7 @@
   </Error>
 {/if}
 
-{#if hasPerm(data.role, "post::create")}
+{#if hasPerm(data.role, PostCreate)}
   <button
     data-variant="info"
     class="cursor-pointer"

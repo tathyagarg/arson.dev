@@ -1,11 +1,22 @@
 <script lang="ts">
   import Byline from "$lib/components/Byline.svelte";
+  import Comment from "$lib/components/Comment.svelte";
+  import Error from "$lib/components/Error.svelte";
   import Footer from "$lib/components/Footer.svelte";
-  import { hasPerm } from "$lib/perms";
+  import {
+    CommentCreate,
+    hasPerm,
+    PostDelete,
+    PostEdit,
+    PostUnpublish,
+    UnpublishedPublish,
+  } from "$lib/perms";
 
   let { data } = $props();
   const post = () => data.post!;
-  const role = () => data.role ?? "user";
+  const user = () => data.user;
+
+  const role = () => user()?.role ?? "user";
 </script>
 
 <svelte:head>
@@ -17,7 +28,7 @@
     class="flex flex-col md:flex-row md:items-center md:justify-between my-4 md:my-0"
   >
     <div class="flex gap-4">
-      {#if hasPerm(role(), "post::edit")}
+      {#if hasPerm(role(), PostEdit)}
         <button
           data-variant="info"
           class="cursor-pointer"
@@ -27,7 +38,7 @@
         </button>
       {/if}
 
-      {#if hasPerm(role(), "post::delete")}
+      {#if hasPerm(role(), PostDelete)}
         <form
           method="POST"
           action="?/delete"
@@ -43,7 +54,7 @@
         </form>
       {/if}
 
-      {#if hasPerm(role(), "unpublished::publish") && !post().published}
+      {#if hasPerm(role(), UnpublishedPublish) && !post().published}
         <form
           method="POST"
           action="?/publish"
@@ -59,7 +70,7 @@
         </form>
       {/if}
 
-      {#if hasPerm(role(), "post::unpublish") && post().published}
+      {#if hasPerm(role(), PostUnpublish) && post().published}
         <form
           method="POST"
           action="?/unpublish"
@@ -89,6 +100,30 @@
   <div id="blog">
     {@html post().content}
   </div>
+
+  <hr />
+
+  <h2 class="text-3xl font-bold py-4 bg-background-sec">Comments</h2>
+
+  <div id="comments">
+    {#each post().comments as comment}
+      <Comment {comment} user={user()} />
+    {/each}
+  </div>
+
+  {#if user() && hasPerm(role(), CommentCreate)}
+    <form method="POST" action="?/comment">
+      <textarea
+        name="content"
+        placeholder="Write a comment..."
+        class="w-full p-2 border border-gray-300 rounded mb-2"
+        required
+      ></textarea>
+      <button data-variant="primary" type="submit"> Post Comment </button>
+    </form>
+  {:else}
+    <Error>You must be logged in to post a comment.</Error>
+  {/if}
 </div>
 
 <Footer

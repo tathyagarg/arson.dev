@@ -24,8 +24,8 @@ export const load: PageServerLoad = async ({ params }) => {
     orderBy: {
       createdAt: "desc",
     },
-    // @ts-expect-error
     include: {
+      // @ts-expect-error
       content: false,
     }
   });

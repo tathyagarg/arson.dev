@@ -1,14 +1,14 @@
 import { prisma } from "$lib/server/prisma";
 import { redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "../$types";
-import { hasPerm } from "$lib/perms";
+import { hasPerm, PostCreate } from "$lib/perms";
 
 export const prerender = false;
 
 export const load: PageServerLoad = async ({ locals }) => {
   let role = locals.user?.role || "user";
 
-  if (!hasPerm(role, "post::create")) {
+  if (!hasPerm(role, PostCreate)) {
     return redirect(308, "/blog?err=403");
   }
 
@@ -25,7 +25,7 @@ export const actions = {
       }
     }
 
-    if (!hasPerm(user.role, "post::create")) {
+    if (!hasPerm(user.role, PostCreate)) {
       return {
         status: 403,
         error: new Error("You do not have permission to create a post"),

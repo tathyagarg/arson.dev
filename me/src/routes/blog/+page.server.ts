@@ -1,4 +1,4 @@
-import { hasPerm, type Role } from "$lib/perms";
+import { hasPerm, UnpublishedView, type Role } from "$lib/perms";
 import { prisma } from "$lib/server/prisma"
 import type { PageServerLoad } from "./$types";
 
@@ -13,13 +13,12 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 
   const role = locals.user?.role || "user";
 
-  let includeUnpublished = hasPerm(role as Role, "unpublished::view");
+  let includeUnpublished = hasPerm(role as Role, UnpublishedView);
 
   const posts = await prisma.post.findMany({
     orderBy: {
       createdAt: "desc",
     },
-    // @ts-expect-error
     include: {
       content: false,
       author: true,
