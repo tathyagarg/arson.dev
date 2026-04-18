@@ -1,0 +1,40 @@
+footer:
+  poweredBy: '<img src="https://img.shields.io/badge/Astro-20232A?style=for-the-badge&logo=Astro&logoColor=BC52EE" alt="Astro"/>'
+  madeWith: '<img src="https://img.shields.io/badge/💔-black?style=for-the-badge" alt="hatred">'
+  inspiredBy: '<a href="https://github.com/cyteon/the-watcher">The Watcher</a>'
+  license: >
+    <a href="http://www.wtfpl.net/">
+      <img
+      src="http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl-badge-4.png"
+      width="80"
+      height="15"
+      alt="WTFPL"/>
+    </a>
+
+hardDegradedLimit: 1000
+degradedMultiplier: 2
+uptimeCheckInterval: 30
+servicesCacheTTL: 60
+
+services:
+  dwmun:
+    name: 'DWMUN25'
+    url: 'https://dwmun.co.in'
+    description: 'The official website of DWMUN25'
+    recovery: 'pm2 restart dwmun25'
+
+  intoxicode:
+    name: 'Intoxicode'
+    url: 'https://intoxicode.arson.dev'
+    description: 'An esolang'
+    recovery: 'pm2 restart intox'
+
+  portfolio:
+    name: 'Personal Website'
+    url: 'https://arson.dev/'
+    description: 'My personal website'
+
+  harbor:
+    name: 'Harbor Browser'
+    url: 'https://harbor.arson.dev/'
+    description: 'My megaproject'

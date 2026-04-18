@@ -5,11 +5,20 @@ export const handle: Handle = async ({ event, resolve }) => {
   const sessionId = event.cookies.get("sessionId");
 
   if (sessionId) {
-    // @ts-expect-error
     const session = await prisma.session.findUnique({
       where: { id: sessionId },
-      include: { user: true }
+      include: {
+        user: {
+          select: {
+            password: false,
+            uuid: true,
+            username: true,
+            role: true,
+          }
+        }
+      }
     });
+
 
     if (session && session.expiresAt > new Date()) {
       event.locals.user = session.user;

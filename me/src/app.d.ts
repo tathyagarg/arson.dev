@@ -10,7 +10,7 @@ declare global {
       user: {
         uuid: string;
         username: string;
-        role: Role;
+        role: string;
       } | null;
     }
     // interface PageData {}
