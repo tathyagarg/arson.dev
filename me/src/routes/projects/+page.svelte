@@ -11,6 +11,13 @@
       emph: true,
     },
     {
+      name: "DWMUN'26",
+      description: "A website for the DWMUN'26 MUN conference",
+      img: "/assets/projects/dwmun.png",
+      link: "https://www.dwmun.co.in/",
+      github: "https://github.com/tathyagarg/dwmun26",
+    },
+    {
       name: "Intoxicode",
       description: "A programming language that I wrote from scratch in Zig",
       img: "/assets/projects/intoxicode.png",
@@ -40,13 +47,6 @@
       img: "/assets/projects/postperson.png",
       link: null,
       github: "https://github.com/tathyagarg/postperson",
-    },
-    {
-      name: "DWMUN'25",
-      description: "A website for the DWMUN'25 conference",
-      img: "/assets/projects/dwmun.png",
-      link: "https://dwmun.co.in/",
-      github: "https://github.com/tathyagarg/dwmun25",
     },
     {
       name: "Techfusion'24",
