@@ -29,6 +29,9 @@
   </button>
 {/if}
 
+{#if data.posts.length === 0}
+  <p>No posts found.</p>
+{/if}
 {#each data.posts as post}
   <PostComp {post} />
 {/each}
