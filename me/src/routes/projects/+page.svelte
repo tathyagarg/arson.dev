@@ -82,8 +82,7 @@
     <div
       class:col-span-2={project.emph}
       class="bg-black/20 backdrop-blur-sm rounded-lg overflow-hidden
-      border-2 border-background-prim
-      "
+      border-[0.5px] border-white/20"
     >
       <img src={project.img} alt={project.name} class="w-full" />
       {#if project.link}

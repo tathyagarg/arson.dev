@@ -21,7 +21,6 @@ export const load: PageServerLoad = async ({ locals, url }) => {
     },
     include: {
       content: false,
-      author: true,
     },
     where: {
       published: includeUnpublished ? undefined : true,

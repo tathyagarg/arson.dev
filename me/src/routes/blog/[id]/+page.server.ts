@@ -113,7 +113,6 @@ export const load: PageServerLoad = async ({ params, locals }) => {
       id: parseInt(params.id),
     },
     include: {
-      author: true,
       comments: {
         include: {
           author: true,

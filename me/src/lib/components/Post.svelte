@@ -1,9 +1,5 @@
 <script lang="ts">
-  import Byline from "./Byline.svelte";
-
-  let { post, username = null } = $props();
-
-  let authorUsername = () => post.author?.username ?? username!;
+  let { post } = $props();
 </script>
 
 <a href="/blog/{post.id}" class="no-underline!">
@@ -19,9 +15,6 @@
           "0",
         )}R{String(post.revisions).padStart(2, "0")}
       </p>
-      {#if !username}
-        <Byline username={authorUsername()} />
-      {/if}
     {/if}
   </div>
 </a>

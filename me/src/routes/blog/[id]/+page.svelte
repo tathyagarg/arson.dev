@@ -10,17 +10,18 @@
     PostEdit,
     PostUnpublish,
     UnpublishedPublish,
+    type Role,
   } from "$lib/perms";
 
   let { data } = $props();
-  const post = () => data.post!;
-  const user = () => data.user;
+  const post = $derived(data.post!);
+  const user = $derived(data.user);
 
-  const role = () => user()?.role ?? "user";
+  const role = $derived(user?.role ?? "user") as Role;
 </script>
 
 <svelte:head>
-  <title>{post().title} | Blog | Arson.dev</title>
+  <title>{post.title} | Blog | Arson.dev</title>
 </svelte:head>
 
 <div class="relative h-full w-full">
@@ -28,17 +29,17 @@
     class="flex flex-col md:flex-row md:items-center md:justify-between my-4 md:my-0"
   >
     <div class="flex gap-4">
-      {#if hasPerm(role(), PostEdit)}
+      {#if hasPerm(role, PostEdit)}
         <button
           data-variant="info"
           class="cursor-pointer"
-          onclick={() => (window.location.href = `/blog/${post().id}/edit`)}
+          onclick={() => (window.location.href = `/blog/${post.id}/edit`)}
         >
           Edit Post
         </button>
       {/if}
 
-      {#if hasPerm(role(), PostDelete)}
+      {#if hasPerm(role, PostDelete)}
         <form
           method="POST"
           action="?/delete"
@@ -54,7 +55,7 @@
         </form>
       {/if}
 
-      {#if hasPerm(role(), UnpublishedPublish) && !post().published}
+      {#if hasPerm(role, UnpublishedPublish) && !post.published}
         <form
           method="POST"
           action="?/publish"
@@ -70,7 +71,7 @@
         </form>
       {/if}
 
-      {#if hasPerm(role(), PostUnpublish) && post().published}
+      {#if hasPerm(role, PostUnpublish) && post.published}
         <form
           method="POST"
           action="?/unpublish"
@@ -88,17 +89,16 @@
     </div>
 
     <h1 class="text-4xl font-bold mb-4">
-      {post().title}
+      {post.title}
     </h1>
   </div>
   <p class="mb-4">
-    Published At: {new Date(post().publishedAt!).toLocaleString()}
+    Published At: {new Date(post.publishedAt!).toLocaleString()}
     &sdot;
-    {post().views} views
+    {post.views} views
   </p>
-  <Byline username={post().author?.username ?? "Unknown"} />
   <div id="blog">
-    {@html post().content}
+    {@html post.content}
   </div>
 
   <hr />
@@ -106,12 +106,12 @@
   <h2 class="text-3xl font-bold py-4 bg-background-sec">Comments</h2>
 
   <div id="comments">
-    {#each post().comments as comment}
-      <Comment {comment} user={user()} />
+    {#each post.comments as comment}
+      <Comment {comment} {user} />
     {/each}
   </div>
 
-  {#if user() && hasPerm(role(), CommentCreate)}
+  {#if user && hasPerm(role, CommentCreate)}
     <form method="POST" action="?/comment">
       <textarea
         name="content"
@@ -127,8 +127,8 @@
 </div>
 
 <Footer
-  pid="P{String(post().id).padStart(3, '0')}"
-  rev="R{String(post().revisions).padStart(2, '0')}"
+  pid="P{String(post.id).padStart(3, '0')}"
+  rev="R{String(post.revisions).padStart(2, '0')}"
 />
 
 <style>
