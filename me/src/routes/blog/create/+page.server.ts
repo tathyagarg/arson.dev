@@ -44,8 +44,6 @@ export const actions = {
         content: content as string,
         published,
         publishedAt: published ? new Date() : null,
-
-        authorId: user.uuid,
       }
     });
 
