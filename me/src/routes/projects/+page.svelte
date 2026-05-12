@@ -41,6 +41,14 @@
       github: "https://github.com/tathyagarg/3-body-problem",
     },
     {
+      name: "Handdrawn Userstyles",
+      description:
+        "A collection of userstyles that give a clumsy, mouse handdrawn aesthetic to your favorite websites",
+      img: "/assets/projects/handdrawn.png",
+      link: "https://handdrawn.arson.dev/",
+      github: "https://github.com/tathyagarg/handdrawn",
+    },
+    {
       name: "Postperson",
       description:
         "A simple TUI application for sending HTTP requests, written in Python with Textual",
@@ -113,4 +121,4 @@
   {/each}
 </div>
 
-<Footer pid="J" rev="00" />
+<Footer pid="J" rev="04" />
