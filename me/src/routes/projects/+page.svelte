@@ -25,6 +25,13 @@
       github: "https://github.com/tathyagarg/intoxicode",
     },
     {
+      name: "loves.rs",
+      description: "Free subdomains on the loves.rs domain",
+      img: "/assets/projects/loves-rs.png",
+      link: "https://www.loves.rs/",
+      github: "https://github.com/tathyagarg/loves.rs",
+    },
+    {
       name: "Odingine",
       description:
         "A primitive 'game engine' written in Odin as an exercise to learn the language",
@@ -121,4 +128,4 @@
   {/each}
 </div>
 
-<Footer pid="J" rev="04" />
+<Footer pid="J" rev="05" />
