@@ -40,6 +40,14 @@
       github: "https://github.com/tathyagarg/odingine",
     },
     {
+      name: "UNGA Reso",
+      description:
+        "An archive of all UNGA resolutions along with their voting records",
+      img: "/assets/projects/ungareso.png",
+      link: "https://www.ungareso.com/",
+      github: "https://github.com/tathyagarg/ungareso",
+    },
+    {
       name: "3-body-problem Simulation",
       description:
         "A simple simulation of the 3-body problem, written in Zig with Raylib for rendering",
@@ -128,4 +136,4 @@
   {/each}
 </div>
 
-<Footer pid="J" rev="05" />
+<Footer pid="J" rev="06" />
