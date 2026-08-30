@@ -72,6 +72,14 @@
       github: "https://github.com/tathyagarg/postperson",
     },
     {
+      name: "Chat App",
+      description:
+        "A simple chat application built with Python and async TCP sockets, with a simple TUI interface",
+      img: "/assets/projects/chatapp.png",
+      link: null,
+      github: "https://github.com/tathyagarg/chat",
+    },
+    {
       name: "Techfusion'24",
       description: "A website for an online tech fest organized by my school",
       img: "/assets/projects/techfusion.png",
@@ -136,4 +144,4 @@
   {/each}
 </div>
 
-<Footer pid="J" rev="06" />
+<Footer pid="J" rev="07" />
