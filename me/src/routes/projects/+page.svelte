@@ -121,33 +121,39 @@
     <div
       class:col-span-2={project.emph}
       class="bg-black/20 backdrop-blur-sm rounded-lg overflow-hidden
-      border-[0.5px] border-white/20"
+      border-[0.5px] border-white/20 flex flex-col justify-between"
     >
       <img src={project.img} alt={project.name} class="w-full" />
-      {#if project.link}
-        <a href={project.link} class="flex flex-col items-center no-underline!">
+
+      <div>
+        {#if project.link}
+          <a
+            href={project.link}
+            class="flex flex-col items-center no-underline!"
+          >
+            <div class="w-full px-2">
+              <h3 class="text-lg font-bold">{project.name}</h3>
+              <p>{project.description}</p>
+            </div>
+          </a>
+        {:else}
           <div class="w-full px-2">
             <h3 class="text-lg font-bold">{project.name}</h3>
             <p>{project.description}</p>
           </div>
-        </a>
-      {:else}
-        <div class="w-full px-2">
-          <h3 class="text-lg font-bold">{project.name}</h3>
-          <p>{project.description}</p>
-        </div>
-      {/if}
+        {/if}
 
-      {#if project.github}
-        <div class="flex items-end justify-start mt-2 px-2 pb-2">
-          <a
-            href={project.github}
-            class="text-sm text-accent-prim hover:underline"
-          >
-            View on GitHub
-          </a>
-        </div>
-      {/if}
+        {#if project.github}
+          <div class="flex items-end justify-start mt-2 px-2 pb-2">
+            <a
+              href={project.github}
+              class="text-sm text-accent-prim hover:underline"
+            >
+              View on GitHub
+            </a>
+          </div>
+        {/if}
+      </div>
     </div>
   {/each}
 </div>
