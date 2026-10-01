@@ -56,6 +56,14 @@
       github: "https://github.com/tathyagarg/3-body-problem",
     },
     {
+      name: "CHIP8 Emulator",
+      description:
+        "A simple CHIP8 emulator written in Rust with terminal graphics for rendering",
+      img: "/assets/projects/chip8.png",
+      link: null,
+      github: "https://github.com/tathyagarg/chip8",
+    },
+    {
       name: "Handdrawn Userstyles",
       description:
         "A collection of userstyles that give a clumsy, mouse handdrawn aesthetic to your favorite websites",
@@ -144,4 +152,4 @@
   {/each}
 </div>
 
-<Footer pid="J" rev="07" />
+<Footer pid="J" rev="08" />
