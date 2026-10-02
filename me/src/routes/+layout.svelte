@@ -12,7 +12,6 @@
   const triangleHeight = (side * Math.sqrt(3)) / 2;
   const overlap = 0.5;
 
-  // Dark blue/navy palette similar to the reference.
   const colors = [
     "#171c30",
     "#191f34",
@@ -32,7 +31,6 @@
   }[] = $state([]);
 
   function random(seed: number) {
-    // Deterministic pseudo-random number generator.
     const x = Math.sin(seed * 12.9898) * 43758.5453;
     return x - Math.floor(x);
   }
@@ -51,7 +49,6 @@
 
         let n = ((row % 2) * side) / 2;
 
-        // Downward triangle
         triangles.push({
           points: `
 						${x + n - overlap},${y - overlap}
@@ -61,7 +58,6 @@
           color: colors[Math.floor(random(row * cols + col) * colors.length)],
         });
 
-        // Upward triangle
         triangles.push({
           points: `
         		${x - side / 2 + n - overlap},${y + triangleHeight + overlap}
