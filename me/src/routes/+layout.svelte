@@ -30,11 +30,6 @@
     color: string;
   }[] = $state([]);
 
-  function random(seed: number) {
-    const x = Math.sin(seed * 12.9898) * 43758.5453;
-    return x - Math.floor(x);
-  }
-
   function generate() {
     triangles = [];
 
@@ -55,7 +50,7 @@
 						${x + side + n + overlap},${y - overlap}
 						${x + side / 2 + n},${y + triangleHeight + overlap}
 					`,
-          color: colors[Math.floor(random(row * cols + col) * colors.length)],
+          color: colors[Math.floor(Math.random() * colors.length)],
         });
 
         triangles.push({
@@ -64,8 +59,7 @@
         		${x + n},${y - overlap}
         		${x + side / 2 + n + overlap},${y + triangleHeight + overlap}
         	`,
-          color:
-            colors[Math.floor(random(row * cols + col + 1) * colors.length)],
+          color: colors[Math.floor(Math.random() * colors.length)],
         });
       }
     }
