@@ -1,0 +1,13 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    {
+      "source": "/colors",
+      "destination": "https://colors-delta-two.vercel.app"
+    },
+    {
+      "source": "/colors/:path*",
+      "destination": "https://colors-delta-two.vercel.app/:path*"
+    }
+  ]
+}
