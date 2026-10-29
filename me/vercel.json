@@ -3,11 +3,11 @@
   "rewrites": [
     {
       "source": "/colors",
-      "destination": "https://colors-delta-two.vercel.app"
+      "destination": "https://colors-two-delta.vercel.app/"
     },
     {
       "source": "/colors/:path*",
-      "destination": "https://colors-delta-two.vercel.app/:path*"
+      "destination": "https://colors-two-delta.vercel.app/:path*"
     }
   ]
 }
