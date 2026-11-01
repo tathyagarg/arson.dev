@@ -110,11 +110,7 @@
 
 <h1 class="text-2xl font-bold mb-4">Projects</h1>
 
-<p class="mb-4">
-  These are my projects. I hate pretty much all of them. If I could, I'd wipe
-  them all, wipe my GitHub, and start over. But I can't bring myself to do that.
-  Projects are arranged from least ashamed of to most ashamed of.
-</p>
+<p class="mb-4">A collection of things I've built over the years</p>
 
 <div class="w-full grid grid-cols-2 gap-4">
   {#each projects as project}
