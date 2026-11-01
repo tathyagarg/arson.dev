@@ -110,7 +110,6 @@
     <nav class="mt-4 flex gap-8">
       <a href="/blog">blog</a>
       <a href="/projects">projects</a>
-      <a href="/login">login</a>
     </nav>
 
     <div class="md:absolute bottom-[8px] left-[8px] text-sm opacity-50">

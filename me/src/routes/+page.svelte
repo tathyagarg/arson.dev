@@ -26,7 +26,10 @@
   <a href="mailto:me@arson.dev">Email</a>
 </div>
 
-<p>I need to write more</p>
+<p>
+  I build software and study international law and philosophy. I need to write
+  more.
+</p>
 
 {#if imageData}
   <pre class="text-xs max-h-[90vh] overflow-y-hidden">{imageData}</pre>
