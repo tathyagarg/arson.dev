@@ -1,3 +1,4 @@
+<!--
 <script lang="ts">
   import "./layout.css";
   import favicon from "$lib/assets/favicon.svg";
@@ -149,3 +150,114 @@
     z-index: 0;
   }
 </style>
+-->
+
+<script lang="ts">
+  import "./layout.css";
+
+  import { onMount } from "svelte";
+
+  let { data, children } = $props();
+
+  let width = $state(0);
+  let height = $state(0);
+
+  const side = 80;
+  const triangleHeight = (side * Math.sqrt(3)) / 2;
+  const overlap = 0.5;
+
+  const colors = [
+    "#171c30",
+    "#191f34",
+    "#1b2137",
+    "#1d243b",
+    "#20263d",
+    "#222941",
+    "#1a2035",
+    "#252b42",
+    "#20263b",
+    "#181e32",
+  ];
+
+  let triangles: {
+    points: string;
+    color: string;
+  }[] = $state([]);
+
+  function generate() {
+    triangles = [];
+
+    const cols = Math.ceil(width / side) + 2;
+    const rows = Math.ceil(height / triangleHeight) + 2;
+
+    for (let row = -1; row < rows; row++) {
+      const y = row * triangleHeight;
+
+      for (let col = -1; col < cols; col++) {
+        const x = col * side;
+
+        let n = ((row % 2) * side) / 2;
+
+        triangles.push({
+          points: `
+						${x + n - overlap},${y - overlap}
+						${x + side + n + overlap},${y - overlap}
+						${x + side / 2 + n},${y + triangleHeight + overlap}
+					`,
+          color: colors[Math.floor(Math.random() * colors.length)],
+        });
+
+        triangles.push({
+          points: `
+        		${x - side / 2 + n - overlap},${y + triangleHeight + overlap}
+        		${x + n},${y - overlap}
+        		${x + side / 2 + n + overlap},${y + triangleHeight + overlap}
+        	`,
+          color: colors[Math.floor(Math.random() * colors.length)],
+        });
+      }
+    }
+  }
+
+  onMount(() => {
+    const resize = () => {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      generate();
+    };
+
+    resize();
+
+    window.addEventListener("resize", resize);
+
+    return () => {
+      window.removeEventListener("resize", resize);
+    };
+  });
+</script>
+
+<div class="fixed inset-0 h-full w-full -z-2 opacity-40">
+  <svg
+    class="fixed inset-0 h-full w-full"
+    viewBox={`0 0 ${width} ${height}`}
+    preserveAspectRatio="none"
+    aria-hidden="true"
+  >
+    {#each triangles as triangle}
+      <polygon points={triangle.points} fill={triangle.color} />
+    {/each}
+  </svg>
+</div>
+
+<div class="h-[calc(100vh-16px)] w-full flex justify-center items-center">
+  <div class="h-[calc(100vh-16px)] w-4/5 p-4">
+    <div class="relative overflow-y-hidden">
+      <nav class="absolute right-0 flex justify-end gap-4 z-100">
+        <a href="/">home</a>
+        <a href="/blog">blog</a>
+        <a href="/projects">projects</a>
+      </nav>
+      {@render children()}
+    </div>
+  </div>
+</div>

@@ -1,19 +1,25 @@
 @import 'tailwindcss';
 
+@font-face {
+  font-family: 'CMU Serif Roman';
+  src: url('/assets/fonts/CMU_Serif.ttf');
+}
+
 @theme {
   --color-background-prim: #0a0a0a;
   --color-background-sec: #101010;
   --color-background-tri: #1a1a1a;
 
   --color-text-head: #fff;
-  --color-text-prim: #ccc;
+  --color-text-prim: #ddd;
   --color-text-sub: #888;
 
   --color-accent-err: #ff5f5f;
   --color-accent-succ: #5fff5f;
-  --color-accent-info: #a8a8ff;
+  --color-accent-info: #fff;
 
   --font-mono: 'SF Mono', 'SF Mono Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  --font-serif: 'CMU Serif Roman', 'Georgia', 'Times New Roman', serif;
   
   --shadow-button:
       inset -2px -2px 0 0 rgba(from var(--color-text-head) r g b / 50%),
@@ -28,6 +34,8 @@
 
 html {
   min-height: 100%;
+
+  background-color: var(--color-background-prim);
 
   /*
   background-color: var(--color-background-prim);
@@ -51,8 +59,8 @@ html {
 
   color: var(--color-text-prim);
 
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-serif);
+  font-size: 14pt;
 }
 
 body {
@@ -60,7 +68,14 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
   color: var(--color-text-head);
+}
+
+h1 {
+  padding-bottom: 12pt;
+  margin-bottom: 12pt;
+  border-bottom: 1px dashed white;
 }
 
 a {

@@ -12,12 +12,35 @@
     UnpublishedPublish,
     type Role,
   } from "$lib/perms";
+  import { onMount } from "svelte";
 
   let { data } = $props();
   const post = $derived(data.post!);
   const user = $derived(data.user);
 
   const role = $derived(user?.role ?? "user") as Role;
+
+  let hasSelection = $state(false);
+
+  onMount(() => {
+    const handleSelectionChange = () => {
+      const selection = window.getSelection();
+      const blog = document.getElementById("blog");
+
+      hasSelection = !!(
+        selection &&
+        !selection.isCollapsed &&
+        blog?.contains(selection.anchorNode) &&
+        blog?.contains(selection.focusNode)
+      );
+    };
+
+    document.addEventListener("selectionchange", handleSelectionChange);
+
+    return () => {
+      document.removeEventListener("selectionchange", handleSelectionChange);
+    };
+  });
 </script>
 
 <svelte:head>
@@ -25,9 +48,12 @@
 </svelte:head>
 
 <div class="relative h-full w-full">
-  <div
-    class="flex flex-col md:flex-row md:items-center md:justify-between my-4 md:my-0"
-  >
+  <div class="flex flex-col mb-4">
+    <h1 class="text-4xl font-bold">
+      {post.title}
+    </h1>
+
+    <!--
     <div class="flex gap-4">
       {#if hasPerm(role, PostEdit)}
         <button
@@ -87,43 +113,21 @@
         </form>
       {/if}
     </div>
-
-    <h1 class="text-4xl font-bold mb-4">
-      {post.title}
-    </h1>
+    -->
   </div>
   <p class="mb-4">
     Published At: {new Date(post.publishedAt!).toLocaleString()}
     &sdot;
     {post.views} views
   </p>
+
+  {#if hasSelection && hasPerm(role, CommentCreate)}
+    <p class="fixed right-8 w-1/4 bg-red-500">SELECTED</p>
+  {/if}
+
   <div id="blog">
     {@html post.content}
   </div>
-
-  <hr />
-
-  <h2 class="text-3xl font-bold py-4 bg-background-sec">Comments</h2>
-
-  <div id="comments">
-    {#each post.comments as comment}
-      <Comment {comment} {user} />
-    {/each}
-  </div>
-
-  {#if user && hasPerm(role, CommentCreate)}
-    <form method="POST" action="?/comment">
-      <textarea
-        name="content"
-        placeholder="Write a comment..."
-        class="w-full p-2 border border-gray-300 rounded mb-2"
-        required
-      ></textarea>
-      <button data-variant="primary" type="submit"> Post Comment </button>
-    </form>
-  {:else}
-    <Error>You must be logged in to post a comment.</Error>
-  {/if}
 </div>
 
 <Footer
@@ -134,6 +138,10 @@
 <style>
   #blog {
     text-align-last: start;
+    height: 100%;
+    overflow-y: scroll;
+
+    width: 66%;
   }
 
   #blog :global(h1) {
@@ -165,6 +173,7 @@
 
   #blog :global(p) {
     margin-bottom: 1rem;
+    text-align: justify;
   }
 
   #blog :global(a) {
