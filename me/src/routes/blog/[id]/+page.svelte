@@ -13,6 +13,7 @@
     type Role,
   } from "$lib/perms";
   import { onMount } from "svelte";
+  import "highlight.js/styles/github-dark.css";
 
   let { data } = $props();
   const post = $derived(data.post!);
@@ -20,27 +21,27 @@
 
   const role = $derived(user?.role ?? "user") as Role;
 
-  let hasSelection = $state(false);
+  // let hasSelection = $state(false);
 
-  onMount(() => {
-    const handleSelectionChange = () => {
-      const selection = window.getSelection();
-      const blog = document.getElementById("blog");
+  // onMount(() => {
+  //   const handleSelectionChange = () => {
+  //     const selection = window.getSelection();
+  //     const blog = document.getElementById("blog");
 
-      hasSelection = !!(
-        selection &&
-        !selection.isCollapsed &&
-        blog?.contains(selection.anchorNode) &&
-        blog?.contains(selection.focusNode)
-      );
-    };
+  //     hasSelection = !!(
+  //       selection &&
+  //       !selection.isCollapsed &&
+  //       blog?.contains(selection.anchorNode) &&
+  //       blog?.contains(selection.focusNode)
+  //     );
+  //   };
 
-    document.addEventListener("selectionchange", handleSelectionChange);
+  //   document.addEventListener("selectionchange", handleSelectionChange);
 
-    return () => {
-      document.removeEventListener("selectionchange", handleSelectionChange);
-    };
-  });
+  //   return () => {
+  //     document.removeEventListener("selectionchange", handleSelectionChange);
+  //   };
+  // });
 </script>
 
 <svelte:head>
@@ -53,7 +54,6 @@
       {post.title}
     </h1>
 
-    <!--
     <div class="flex gap-4">
       {#if hasPerm(role, PostEdit)}
         <button
@@ -113,17 +113,12 @@
         </form>
       {/if}
     </div>
-    -->
   </div>
   <p class="mb-4">
     Published At: {new Date(post.publishedAt!).toLocaleString()}
     &sdot;
     {post.views} views
   </p>
-
-  {#if hasSelection && hasPerm(role, CommentCreate)}
-    <p class="fixed right-8 w-1/4 bg-red-500">SELECTED</p>
-  {/if}
 
   <div id="blog">
     {@html post.content}
@@ -212,5 +207,12 @@
     margin-bottom: 1rem;
 
     text-align-last: start;
+    font-size: 0.75rem;
+  }
+
+  #blog :global(code) {
+    background-color: var(--color-background-tri);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
   }
 </style>

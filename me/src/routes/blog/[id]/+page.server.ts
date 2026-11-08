@@ -3,6 +3,7 @@ import type { PageServerLoad } from "../$types";
 import { hasPerm, PostDelete, PostUnpublish, PostView, UnpublishedPublish, UnpublishedView, type Role } from "$lib/perms";
 import { redirect, type Actions } from "@sveltejs/kit";
 import { marked } from "marked";
+import { parseMarkdown } from "$lib/server/markdown";
 
 export const prerender = false;
 
@@ -152,7 +153,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
     },
   });
 
-  data.content = await marked.parse(data.content);
+  data.content = await parseMarkdown(data.content);
   data.views += 1;
 
   return {
