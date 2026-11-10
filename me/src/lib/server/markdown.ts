@@ -1,27 +1,24 @@
 import { Marked } from "marked";
-import hljs from "highlight.js/lib/common";
+import hljs from "highlight.js";
 
-const marked = new Marked({
-  highlight: undefined,
-});
+const marked = new Marked();
 
 marked.use({
   renderer: {
     code({ text, lang }) {
       const language = lang?.split(/\s+/)[0];
 
-      let highlighted = text;
+      console.log("Language:", language);
+      console.log("LLVM recognized:", hljs.getLanguage(language ?? ""));
 
-      if (language && hljs.getLanguage(language)) {
-        highlighted = hljs.highlight(text, {
-          language,
-        }).value;
-      } else {
-        highlighted = hljs.highlightAuto(text).value;
-      }
+      const highlighted = language && hljs.getLanguage(language)
+        ? hljs.highlight(text, { language }).value
+        : hljs.highlightAuto(text).value;
+
+      console.log("Highlighted output:", highlighted.slice(0, 500));
 
       return `<pre><code class="hljs language-${language ?? "plaintext"}">${highlighted}</code></pre>`;
-    },
+    }
   },
 });
 

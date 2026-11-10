@@ -207,12 +207,12 @@
     margin-bottom: 1rem;
 
     text-align-last: start;
-    font-size: 0.75rem;
   }
 
   #blog :global(code) {
     background-color: var(--color-background-tri);
     padding: 0.25rem 0.5rem;
     border-radius: 0.25rem;
+    font-size: 0.75rem;
   }
 </style>
